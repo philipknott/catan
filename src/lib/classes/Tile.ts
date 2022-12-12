@@ -2,6 +2,7 @@ import type { Resource } from '../global/Types';
 
 export default class Tile {
 	private _resource: Resource;
+	private _value: number;
 
 	// Axial Coordinates
 	private _q: number;
@@ -12,8 +13,10 @@ export default class Tile {
 	private _x: number;
 	private _y: number;
 
-	constructor(resource: Resource, q: number, r: number) {
+	constructor(resource: Resource, value: number, q: number, r: number) {
 		this._resource = resource;
+		this._value = value;
+
 		this._q = q;
 		this._r = r;
 		this._s = -q - r;
@@ -24,6 +27,10 @@ export default class Tile {
 
 	get resource(): Resource {
 		return this._resource;
+	}
+
+	get value(): number {
+		return this._value;
 	}
 
 	get q(): number {

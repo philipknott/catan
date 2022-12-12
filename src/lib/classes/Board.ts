@@ -23,7 +23,7 @@ export default class Board {
 
 		const tiles: Tile[] = [];
 		for (const [q, r] of AXIAL_POSITIONS) {
-			const tempTile = new Tile(getRandomResource(), q, r);
+			const tempTile = new Tile(getRandomResource(), Math.floor(12 * Math.random()) + 1, q, r);
 			tiles.push(tempTile);
 		}
 

@@ -1,23 +1,23 @@
 <script lang="ts">
 	import Board from '$lib/classes/Board';
 	import type Tile from '$lib/classes/Tile';
-	import { ALPHA, X_OFFSET, Y_OFFSET } from '$lib/global/Constants';
+	import TileView from '$lib/components/TileView.svelte';
+	import { ALPHA, TILE_HEIGHT, TILE_WIDTH } from '$lib/global/Constants';
 
 	const board = new Board();
-	console.log(board.tiles);
-
-	const getLeft = (tile: Tile): number => ALPHA * tile.x + X_OFFSET;
-	const getTop = (tile: Tile): number => ALPHA * tile.y + Y_OFFSET;
 </script>
 
 <div class="board">
 	{#each board.tiles as tile}
+		<TileView {tile} />
+		<!-- <p style:left="{getLeft(tile)}px" style:top="{getTop(tile)}px">1</p>
 		<img
 			class="tile"
 			src="tiles/{tile.resource}.png"
 			alt=""
-			style="left: {getLeft(tile)}px; top: {getTop(tile)}px;"
-		/>
+			style:left="{getLeft(tile)}px"
+			style:top="{getTop(tile)}px"
+		/> -->
 	{/each}
 </div>
 
@@ -31,7 +31,17 @@
 		border: 2px solid blue;
 	}
 
-	.tile {
+	p {
 		position: absolute;
+		border: 2pt solid red;
+		border-radius: 50%;
+		background-color: bisque;
+		font-size: 70px;
+		height: 100px;
+		width: 100px;
+		text-align: center;
+		vertical-align: center;
+		margin-block: 0px;
+		z-index: 1;
 	}
 </style>

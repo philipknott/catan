@@ -101,7 +101,14 @@ export const BOARD_HEIGHT = 2165;
 export const TILE_WIDTH = 500;
 export const TILE_HEIGHT = Math.floor(250 * Math.sqrt(3));
 
-export const X_OFFSET = (BOARD_WIDTH - TILE_WIDTH) / 2;
-export const Y_OFFSET = (BOARD_HEIGHT - TILE_HEIGHT) / 2;
+export const BUTTON_WIDTH = 100;
+export const BUTTON_HEIGHT = 100;
 
-export const ALPHA = 250; // Conversion factor for isometric unit -> pixels
+export const TILE_X_OFFSET = (BOARD_WIDTH - TILE_WIDTH) / 2;
+export const TILE_Y_OFFSET = (BOARD_HEIGHT - TILE_HEIGHT) / 2;
+
+export const BUTTON_X_OFFSET = (BOARD_WIDTH - BUTTON_WIDTH) / 2;
+export const BUTTON_y_OFFSET = (BOARD_HEIGHT - BUTTON_HEIGHT) / 2;
+
+// Conversion factor for isometric unit -> pixels (half width of tile)
+export const ALPHA = 250;
