@@ -1,25 +1,122 @@
-export const AXIAL_POSITIONS = [
-	[-2, 0],
-	[-2, 1],
-	[-2, 2],
-	[-1, -1],
-	[-1, 0],
-	[-1, 1],
-	[-1, 2],
-	[0, -2],
-	[0, -1],
-	[0, 0],
-	[0, 1],
-	[0, 2],
-	[1, -2],
-	[1, -1],
-	[1, 0],
-	[1, 1],
-	[2, -2],
-	[2, -1],
-	[2, 0]
+import type { AxialCoords } from './Types';
+
+export const TILE_AXIAL_COORDS: AxialCoords[] = [
+	{ q: -2, r: 0 },
+	{ q: -2, r: 1 },
+	{ q: -2, r: 2 },
+	{ q: -1, r: -1 },
+	{ q: -1, r: 0 },
+	{ q: -1, r: 1 },
+	{ q: -1, r: 2 },
+	{ q: 0, r: -2 },
+	{ q: 0, r: -1 },
+	{ q: 0, r: 0 },
+	{ q: 0, r: 1 },
+	{ q: 0, r: 2 },
+	{ q: 1, r: -2 },
+	{ q: 1, r: -1 },
+	{ q: 1, r: 0 },
+	{ q: 1, r: 1 },
+	{ q: 2, r: -2 },
+	{ q: 2, r: -1 },
+	{ q: 2, r: 0 },
 ];
 
+export const EDGE_AXIAL_COORDS: AxialCoords[] = [
+	// --- Upslope (q half, r whole) ---
+	{ q: -2.5, r: 0 },
+	{ q: -2.5, r: 1 },
+	{ q: -2.5, r: 2 },
+
+	{ q: -1.5, r: -1 },
+	{ q: -1.5, r: 0 },
+	{ q: -1.5, r: 1 },
+	{ q: -1.5, r: 2 },
+
+	{ q: -0.5, r: -2 },
+	{ q: -0.5, r: -1 },
+	{ q: -0.5, r: 0 },
+	{ q: -0.5, r: 1 },
+	{ q: -0.5, r: 2 },
+
+	{ q: 0.5, r: -2 },
+	{ q: 0.5, r: -1 },
+	{ q: 0.5, r: 0 },
+	{ q: 0.5, r: 1 },
+	{ q: 0.5, r: 2 },
+
+	{ q: 1.5, r: -2 },
+	{ q: 1.5, r: -1 },
+	{ q: 1.5, r: 0 },
+	{ q: 1.5, r: 1 },
+
+	{ q: 2.5, r: -2 },
+	{ q: 2.5, r: -1 },
+	{ q: 2.5, r: 0 },
+
+	// --- Flat (q whole, r half) ---
+	{ q: -2, r: -0.5 },
+	{ q: -2, r: 0.5 },
+	{ q: -2, r: 1.5 },
+	{ q: -2, r: 2.5 },
+
+	{ q: -1, r: -1.5 },
+	{ q: -1, r: -0.5 },
+	{ q: -1, r: 0.5 },
+	{ q: -1, r: 1.5 },
+	{ q: -1, r: 2.5 },
+
+	{ q: 0, r: -2.5 },
+	{ q: 0, r: -1.5 },
+	{ q: 0, r: -0.5 },
+	{ q: 0, r: 0.5 },
+	{ q: 0, r: 1.5 },
+	{ q: 0, r: 2.5 },
+
+	{ q: 1, r: -2.5 },
+	{ q: 1, r: -1.5 },
+	{ q: 1, r: -0.5 },
+	{ q: 1, r: 0.5 },
+	{ q: 1, r: 1.5 },
+
+	{ q: 2, r: -2.5 },
+	{ q: 2, r: -1.5 },
+	{ q: 2, r: -0.5 },
+	{ q: 2, r: 0.5 },
+
+	// --- Downslope (q half, r half) ---
+	{ q: -2.5, r: 0.5 },
+	{ q: -2.5, r: 1.5 },
+	{ q: -2.5, r: 2.5 },
+
+	{ q: -1.5, r: -0.5 },
+	{ q: -1.5, r: 0.5 },
+	{ q: -1.5, r: 1.5 },
+	{ q: -1.5, r: 2.5 },
+
+	{ q: -0.5, r: -1.5 },
+	{ q: -0.5, r: -0.5 },
+	{ q: -0.5, r: 0.5 },
+	{ q: -0.5, r: 1.5 },
+	{ q: -0.5, r: 2.5 },
+
+	{ q: 0.5, r: -2.5 },
+	{ q: 0.5, r: -1.5 },
+	{ q: 0.5, r: -0.5 },
+	{ q: 0.5, r: 0.5 },
+	{ q: 0.5, r: 1.5 },
+
+	{ q: 1.5, r: -2.5 },
+	{ q: 1.5, r: -1.5 },
+	{ q: 1.5, r: -0.5 },
+	{ q: 1.5, r: 0.5 },
+
+	{ q: 2.5, r: -2.5 },
+	{ q: 2.5, r: -1.5 },
+	{ q: 2.5, r: -0.5 },
+];
+
+// I'm not sure I'll need to use this...
 export const EDGE_CONNECTIONS: [number, number][] = [
 	[0, 3],
 	[0, 4],
@@ -92,7 +189,7 @@ export const EDGE_CONNECTIONS: [number, number][] = [
 	[48, 52],
 	[49, 52],
 	[49, 53],
-	[50, 53]
+	[50, 53],
 ];
 
 export const BOARD_WIDTH = 2000;
@@ -104,11 +201,8 @@ export const TILE_HEIGHT = Math.floor(250 * Math.sqrt(3));
 export const BUTTON_WIDTH = 100;
 export const BUTTON_HEIGHT = 100;
 
-export const TILE_X_OFFSET = (BOARD_WIDTH - TILE_WIDTH) / 2;
-export const TILE_Y_OFFSET = (BOARD_HEIGHT - TILE_HEIGHT) / 2;
-
-export const BUTTON_X_OFFSET = (BOARD_WIDTH - BUTTON_WIDTH) / 2;
-export const BUTTON_y_OFFSET = (BOARD_HEIGHT - BUTTON_HEIGHT) / 2;
-
-// Conversion factor for isometric unit -> pixels (half width of tile)
+// Conversion factor for isometric unit -> pixels (probably just half width of tile)
 export const ALPHA = 250;
+
+export const EDGE_WIDTH = 100;
+export const EDGE_HEIGHT = 50;

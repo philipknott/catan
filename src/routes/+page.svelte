@@ -1,10 +1,7 @@
 <script lang="ts">
-	import Board from '$lib/classes/Board';
-	import BoardView from '$lib/components/BoardView.svelte';
-
-	const board = new Board();
+	import GameView from '$lib/components/GameView.svelte';
 </script>
 
 <main>
-	<BoardView {board} />
+	<GameView />
 </main>

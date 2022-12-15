@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type Board from '$lib/classes/Board';
+	import EdgePositionView from './EdgePositionView.svelte';
 	import TileView from './TileView.svelte';
 
 	export let board: Board;
@@ -7,8 +8,13 @@
 
 <div class="board">
 	<!-- Tiles -->
-	{#each board.tiles as tile}
-		<TileView {tile} />
+	{#each [...board.tiles] as [pos, tile]}
+		<TileView {pos} {tile} />
+	{/each}
+
+	<!-- Edges -->
+	{#each [...board.edges] as [pos, edgePiece]}
+		<EdgePositionView {edgePiece} {pos} />
 	{/each}
 </div>
 

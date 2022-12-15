@@ -1,20 +1,19 @@
 <script lang="ts">
 	import type Tile from '$lib/classes/Tile';
-	import {
-		ALPHA,
-		BUTTON_X_OFFSET,
-		BUTTON_y_OFFSET,
-		TILE_X_OFFSET,
-		TILE_Y_OFFSET
-	} from '$lib/global/Constants';
-	import { Resource } from '$lib/global/Types';
+	import { BUTTON_HEIGHT, BUTTON_WIDTH, TILE_HEIGHT, TILE_WIDTH } from '$lib/global/Constants';
+	import { convertAxialToSquare } from '$lib/global/Helpers';
+	import { Resource, type AxialCoords } from '$lib/global/Types';
 
 	export let tile: Tile;
+	export let pos: AxialCoords;
 
-	const tileLeft = ALPHA * tile.x + TILE_X_OFFSET;
-	const tileTop = ALPHA * tile.y + TILE_Y_OFFSET;
-	const buttonLeft = ALPHA * tile.x + BUTTON_X_OFFSET;
-	const buttonTop = ALPHA * tile.y + BUTTON_y_OFFSET;
+	const { x, y } = convertAxialToSquare(pos);
+
+	const tileLeft = x - TILE_WIDTH / 2;
+	const tileTop = y - TILE_HEIGHT / 2;
+
+	const buttonLeft = x - BUTTON_WIDTH / 2;
+	const buttonTop = y - BUTTON_HEIGHT / 2;
 
 	const color = tile.value === 6 || tile.value === 8 ? 'red' : 'black';
 </script>
