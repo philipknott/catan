@@ -6,25 +6,32 @@
 	export let board: Board;
 </script>
 
-<div class="board">
-	<!-- Tiles -->
-	{#each [...board.tiles] as [pos, tile]}
-		<TileView {pos} {tile} />
-	{/each}
+<div class="wrapper">
+	<div class="board">
+		<!-- Tiles -->
+		{#each [...board.tiles] as [pos, tile]}
+			<TileView {pos} {tile} />
+		{/each}
 
-	<!-- Edges -->
-	{#each [...board.edges] as [pos, edgePiece]}
-		<EdgePositionView {edgePiece} {pos} />
-	{/each}
+		<!-- Edges -->
+		{#each [...board.edges] as [pos, edgePiece]}
+			<EdgePositionView {edgePiece} {pos} />
+		{/each}
+	</div>
 </div>
 
 <style>
+	.wrapper {
+		padding: 50px;
+		border: 2px solid red;
+		max-width: 1000px;
+		width: 100%;
+	}
+
 	.board {
+		width: 100%;
 		position: relative;
-		width: 2000px; /* BOARD_WIDTH */
-		height: 2165px; /* BOARD_HEIGHT */
-		left: 100px;
-		top: 100px;
 		border: 2px solid blue;
+		padding-bottom: 108%; /* for aspect ratio */
 	}
 </style>

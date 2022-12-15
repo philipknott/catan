@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type EdgePiece from '$lib/classes/pieces/EdgePiece';
-	import { EDGE_HEIGHT, EDGE_WIDTH } from '$lib/global/Constants';
+	import { EDGE_BUTTON_HEIGHT, EDGE_BUTTON_WIDTH } from '$lib/global/Constants';
 	import { calculateEdgeRotation, convertAxialToSquare } from '$lib/global/Helpers';
 	import type { AxialCoords } from '$lib/global/Types';
 
@@ -8,25 +8,29 @@
 	export let pos: AxialCoords;
 
 	const { x, y } = convertAxialToSquare(pos);
-	const rotate = `${calculateEdgeRotation(pos)}rad`;
-	const width = `${EDGE_WIDTH}px`;
-	const height = `${EDGE_HEIGHT}px`;
-	const left = `${x - EDGE_WIDTH / 2}px`;
-	const top = `${y - EDGE_HEIGHT / 2}px`;
+	const rotation = calculateEdgeRotation(pos);
 
-	if (edgePiece != null) {
-	}
+	const width = EDGE_BUTTON_WIDTH;
+	const height = EDGE_BUTTON_HEIGHT;
+	const left = x - width / 2;
+	const top = y - height / 2;
 </script>
 
 {#if edgePiece == null}
-	<button style:width style:height style:left style:top style:rotate />
+	<button
+		style:width="{width}%"
+		style:height="{height}%"
+		style:left="{left}%"
+		style:top="{top}%"
+		style:rotate="{rotation}rad"
+	/>
 {:else}
 	<button
-		style:width
-		style:height
-		style:left
-		style:top
-		style:rotate
+		style:width="{width}%"
+		style:height="{height}%"
+		style:left="{left}%"
+		style:top="{top}%"
+		style:rotate="{rotation}rad"
 		style:opacity="100%"
 		style:color={edgePiece.color}
 	/>

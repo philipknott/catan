@@ -1,11 +1,10 @@
-import { ALPHA, BOARD_HEIGHT, BOARD_WIDTH } from './Constants';
 import type { AxialCoords, SquareCoords } from './Types';
 
 export const convertAxialToSquare = (axialCoord: AxialCoords): SquareCoords => {
 	const [q, r, s] = [axialCoord.q, axialCoord.r, -(axialCoord.q + axialCoord.r)];
 	return {
-		x: ALPHA * (q - r / 2 - s / 2) + BOARD_WIDTH / 2,
-		y: ALPHA * ((Math.sqrt(3) / 2) * (r - s)) + BOARD_HEIGHT / 2,
+		x: 12.5 * (q - r / 2 - s / 2) + 50,
+		y: 10 * (r - s) + 50,
 	};
 };
 

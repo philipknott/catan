@@ -192,17 +192,9 @@ export const EDGE_CONNECTIONS: [number, number][] = [
 	[50, 53],
 ];
 
-export const BOARD_WIDTH = 2000;
-export const BOARD_HEIGHT = 2165;
+// Percentage constants
+export const TILE_WIDTH = 12.5;
+export const TILE_HEIGHT = TILE_WIDTH * (Math.sqrt(3) / 2);
 
-export const TILE_WIDTH = 500;
-export const TILE_HEIGHT = Math.floor(250 * Math.sqrt(3));
-
-export const BUTTON_WIDTH = 100;
-export const BUTTON_HEIGHT = 100;
-
-// Conversion factor for isometric unit -> pixels (probably just half width of tile)
-export const ALPHA = 250;
-
-export const EDGE_WIDTH = 100;
-export const EDGE_HEIGHT = 50;
+export const EDGE_BUTTON_WIDTH = 6;
+export const EDGE_BUTTON_HEIGHT = 2;
