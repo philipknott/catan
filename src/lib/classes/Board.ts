@@ -1,4 +1,4 @@
-import { EDGE_AXIAL_COORDS, TILE_AXIAL_COORDS } from '../global/Constants';
+import { CORNER_AXIAL_COORDS, EDGE_AXIAL_COORDS, TILE_AXIAL_COORDS } from '../global/Constants';
 import { Resource, type AxialCoords } from '../global/Types';
 import type CornerPiece from './pieces/CornerPiece';
 import type EdgePiece from './pieces/EdgePiece';
@@ -65,7 +65,7 @@ export default class Board {
 
 	private initializeCorners(): Map<AxialCoords, CornerPiece | null> {
 		const corners = new Map<AxialCoords, CornerPiece | null>();
-		// TODO
+		CORNER_AXIAL_COORDS.forEach((pos) => corners.set(pos, null));
 		return corners;
 	}
 }

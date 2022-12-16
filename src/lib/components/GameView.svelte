@@ -1,12 +1,12 @@
 <script lang="ts">
-	import Board from '$lib/classes/Board';
+	import Game from '$lib/classes/Game';
 	import BoardView from './BoardView.svelte';
 
-	const board = new Board();
+	const game = new Game();
 </script>
 
 <div>
-	<BoardView {board} />
+	<BoardView board={game.board} />
 </div>
 
 <style>

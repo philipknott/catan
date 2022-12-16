@@ -24,6 +24,7 @@
 	style:left="{tileLeft}%"
 	style:top="{tileTop}%"
 />
+
 {#if tile.resource != Resource.Desert}
 	<p style:left="{buttonLeft}%" style:top="{buttonTop}%" style:color>
 		{tile.value}
