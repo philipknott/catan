@@ -1,33 +1,34 @@
 <script lang="ts">
-	import type Tile from '$lib/classes/Tile';
-	import { convertAxialToSquare } from '$lib/global/Helpers';
-	import { Resource, type AxialCoords } from '$lib/global/Types';
+	import { TILE_HEIGHT, TILE_WIDTH } from '$lib/util/constants';
+	import { Resource } from '$lib/util/enums';
+	import { convertAxialToSquare } from '$lib/util/helpers';
+	import type { AxialCoords, Tile } from '$lib/util/types';
 
 	export let tile: Tile;
 	export let pos: AxialCoords;
 
+	const { resource, value } = tile;
 	const { x, y } = convertAxialToSquare(pos);
-
-	const tileLeft = x - 12.5;
-	const tileTop = y - 10;
-
-	const buttonLeft = x - 2.5;
-	const buttonTop = y - 2.5;
-
-	const color = tile.value === 6 || tile.value === 8 ? 'red' : 'black';
 </script>
 
+<!-- Tile Resource -->
 <img
 	class="tile"
-	src="tiles/{tile.resource}.png"
+	src="tiles/{resource}.png"
 	alt=""
-	style:left="{tileLeft}%"
-	style:top="{tileTop}%"
+	style:left="{x - TILE_WIDTH / 2}%"
+	style:top="{y - TILE_HEIGHT / 2}%"
 />
 
-{#if tile.resource != Resource.Desert}
-	<p style:left="{buttonLeft}%" style:top="{buttonTop}%" style:color>
-		{tile.value}
+<!-- Value -->
+{#if resource != Resource.Desert}
+	<p
+		class="value"
+		style:left="{x - 2.5}%"
+		style:top="{y - 2.5}%"
+		style:color={value === 6 || value === 8 ? 'red' : 'black'}
+	>
+		{value}
 	</p>
 {/if}
 
@@ -38,7 +39,7 @@
 		max-width: 25%;
 	}
 
-	p {
+	.value {
 		position: absolute;
 		border: 2pt solid red;
 		border-radius: 50%;

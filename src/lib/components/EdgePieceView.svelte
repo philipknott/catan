@@ -1,39 +1,36 @@
 <script lang="ts">
-	import type EdgePiece from '$lib/classes/pieces/EdgePiece';
-	import { EDGE_BUTTON_HEIGHT, EDGE_BUTTON_WIDTH } from '$lib/global/Constants';
-	import { calculateEdgeRotation, convertAxialToSquare } from '$lib/global/Helpers';
-	import type { AxialCoords } from '$lib/global/Types';
+	import { EDGE_BUTTON_HEIGHT, EDGE_BUTTON_WIDTH } from '$lib/util/constants';
+	import { EdgePieceType } from '$lib/util/enums';
+	import { calculateEdgeRotation, convertAxialToSquare } from '$lib/util/helpers';
+	import type { AxialCoords, EdgePiece } from '$lib/util/types';
+	import { edges, turn } from '$lib/stores';
 
-	export let edgePiece: EdgePiece | null;
+	export let piece: EdgePiece | null;
 	export let pos: AxialCoords;
-	export let addRoad: (pos: AxialCoords) => void;
 
 	const { x, y } = convertAxialToSquare(pos);
-	const rotation = calculateEdgeRotation(pos);
-	const width = EDGE_BUTTON_WIDTH;
-	const height = EDGE_BUTTON_HEIGHT;
-	const left = x - width / 2;
-	const top = y - height / 2;
 </script>
 
-{#if edgePiece == null}
+{#if piece == null}
 	<button
-		style:width="{width}%"
-		style:height="{height}%"
-		style:left="{left}%"
-		style:top="{top}%"
-		style:rotate="{rotation}rad"
-		on:click={() => addRoad(pos)}
+		style:width="{EDGE_BUTTON_WIDTH}%"
+		style:height="{EDGE_BUTTON_HEIGHT}%"
+		style:left="{x - EDGE_BUTTON_WIDTH / 2}%"
+		style:top="{y - EDGE_BUTTON_HEIGHT / 2}%"
+		style:rotate="{calculateEdgeRotation(pos)}rad"
+		on:click={() => {
+			edges.update((edges) => edges.set(pos, { color: turn, type: EdgePieceType.Road }));
+		}}
 	/>
 {:else}
 	<button
-		style:width="{width}%"
-		style:height="{height}%"
-		style:left="{left}%"
-		style:top="{top}%"
-		style:rotate="{rotation}rad"
+		style:width="{EDGE_BUTTON_WIDTH}%"
+		style:height="{EDGE_BUTTON_HEIGHT}%"
+		style:left="{x - EDGE_BUTTON_WIDTH / 2}%"
+		style:top="{y - EDGE_BUTTON_HEIGHT / 2}%"
+		style:rotate="{calculateEdgeRotation(pos)}rad"
 		style:opacity="100%"
-		style:color={edgePiece.color}
+		style:background-color={piece.color}
 	/>
 {/if}
 

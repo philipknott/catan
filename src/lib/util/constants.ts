@@ -1,4 +1,4 @@
-import type { AxialCoords } from './Types';
+import type { AxialCoords } from './types';
 
 export const TILE_AXIAL_COORDS: AxialCoords[] = [
 	{ q: -2, r: 0 },
@@ -273,8 +273,8 @@ export const EDGE_CONNECTIONS: [number, number][] = [
 ];
 
 // Percentage constants
-export const TILE_WIDTH = 12.5;
-export const TILE_HEIGHT = TILE_WIDTH * (Math.sqrt(3) / 2);
+export const TILE_WIDTH = 25; // I should figure out this math...
+export const TILE_HEIGHT = 20;
 
 export const EDGE_BUTTON_WIDTH = 6;
 export const EDGE_BUTTON_HEIGHT = 2;

@@ -1,4 +1,4 @@
-import type { AxialCoords, SquareCoords } from './Types';
+import type { AxialCoords, SquareCoords } from './types';
 
 export const convertAxialToSquare = (axialCoord: AxialCoords): SquareCoords => {
 	const [q, r, s] = [axialCoord.q, axialCoord.r, -(axialCoord.q + axialCoord.r)];

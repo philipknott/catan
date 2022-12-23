@@ -14,12 +14,11 @@ export enum Color {
 	White = 'white',
 }
 
-export type AxialCoords = {
-	q: number;
-	r: number;
-};
+export enum EdgePieceType {
+	Road,
+}
 
-export type SquareCoords = {
-	x: number;
-	y: number;
-};
+export enum CornerPieceType {
+	Settlement,
+	City,
+}

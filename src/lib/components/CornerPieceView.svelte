@@ -1,29 +1,35 @@
 <script lang="ts">
-	import type CornerPiece from '$lib/classes/pieces/CornerPiece';
-	import { CORNER_BUTTON_HEIGHT, CORNER_BUTTON_WIDTH } from '$lib/global/Constants';
-	import { convertAxialToSquare } from '$lib/global/Helpers';
-	import type { AxialCoords } from '$lib/global/Types';
+	import { CORNER_BUTTON_HEIGHT, CORNER_BUTTON_WIDTH } from '$lib/util/constants';
+	import { CornerPieceType } from '$lib/util/enums';
+	import { convertAxialToSquare } from '$lib/util/helpers';
+	import type { AxialCoords, CornerPiece } from '$lib/util/types';
+	import { corners, turn } from '$lib/stores';
 
-	export let cornerPiece: CornerPiece | null;
+	export let piece: CornerPiece | null;
 	export let pos: AxialCoords;
 
 	const { x, y } = convertAxialToSquare(pos);
-
-	const width = CORNER_BUTTON_WIDTH;
-	const height = CORNER_BUTTON_HEIGHT;
-	const left = x - width / 2;
-	const top = y - height / 2;
 </script>
 
-{#if cornerPiece == null}
-	<button style:width="{width}%" style:height="{height}%" style:left="{left}%" style:top="{top}%" />
+{#if !piece}
+	<button
+		style:width="{CORNER_BUTTON_WIDTH}%"
+		style:height="{CORNER_BUTTON_HEIGHT}%"
+		style:left="{x - CORNER_BUTTON_WIDTH / 2}%"
+		style:top="{y - CORNER_BUTTON_HEIGHT / 2}%"
+		on:click={() => {
+			corners.update((corners) =>
+				corners.set(pos, { color: turn, type: CornerPieceType.Settlement })
+			);
+		}}
+	/>
 {:else}
 	<button
-		style:width="{width}%"
-		style:height="{height}%"
-		style:left="{left}%"
-		style:top="{top}%"
-		style:color={cornerPiece.color}
+		style:width="{CORNER_BUTTON_WIDTH}%"
+		style:height="{CORNER_BUTTON_HEIGHT}%"
+		style:left="{x - CORNER_BUTTON_WIDTH / 2}%"
+		style:top="{y - CORNER_BUTTON_HEIGHT / 2}%"
+		style:background-color={piece.color}
 		style:opacity="100%"
 	/>
 {/if}

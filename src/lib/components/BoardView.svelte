@@ -1,33 +1,25 @@
 <script lang="ts">
-	import type Game from '$lib/classes/Game';
-	import type { AxialCoords } from '$lib/global/Types';
+	import { corners, edges, tiles } from '$lib/stores';
 	import CornerPieceView from './CornerPieceView.svelte';
 	import EdgePieceView from './EdgePieceView.svelte';
 	import TileView from './TileView.svelte';
-
-	export let game: Game;
-
-	const addRoad = (pos: AxialCoords) => {
-		game.addRoad(pos);
-		game = game;
-	};
 </script>
 
 <div class="wrapper">
 	<div class="board">
 		<!-- Tiles -->
-		{#each [...game.board.tiles] as [pos, tile]}
+		{#each [...$tiles] as [pos, tile]}
 			<TileView {pos} {tile} />
 		{/each}
 
 		<!-- Edges -->
-		{#each [...game.board.edges] as [pos, edgePiece]}
-			<EdgePieceView {edgePiece} {pos} {addRoad} />
+		{#each [...$edges] as [pos, piece]}
+			<EdgePieceView {piece} {pos} />
 		{/each}
 
 		<!-- Corners -->
-		{#each [...game.board.corners] as [pos, cornerPiece]}
-			<CornerPieceView {cornerPiece} {pos} />
+		{#each [...$corners] as [pos, piece]}
+			<CornerPieceView {piece} {pos} />
 		{/each}
 	</div>
 </div>
