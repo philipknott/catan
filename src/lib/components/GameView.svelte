@@ -6,7 +6,7 @@
 </script>
 
 <div>
-	<BoardView board={game.board} />
+	<BoardView {game} />
 </div>
 
 <style>

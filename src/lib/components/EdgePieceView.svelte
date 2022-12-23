@@ -6,10 +6,10 @@
 
 	export let edgePiece: EdgePiece | null;
 	export let pos: AxialCoords;
+	export let addRoad: (pos: AxialCoords) => void;
 
 	const { x, y } = convertAxialToSquare(pos);
 	const rotation = calculateEdgeRotation(pos);
-
 	const width = EDGE_BUTTON_WIDTH;
 	const height = EDGE_BUTTON_HEIGHT;
 	const left = x - width / 2;
@@ -23,6 +23,7 @@
 		style:left="{left}%"
 		style:top="{top}%"
 		style:rotate="{rotation}rad"
+		on:click={() => addRoad(pos)}
 	/>
 {:else}
 	<button

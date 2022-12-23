@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
-import type Piece from './Piece';
+import Piece from './Piece';
 
-export default interface EdgePiece extends Piece {}
+export default abstract class EdgePiece extends Piece {}
