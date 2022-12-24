@@ -1,9 +1,10 @@
-import { writable } from 'svelte/store';
+import { derived, writable } from 'svelte/store';
 import type { AxialCoords, CornerPiece, EdgePiece, Tile } from '$lib/util/types';
-import { Color } from '$lib/util/enums';
+import { COLOR_ORDER } from './util/constants';
 
-export const turn = Color.Blue;
+export const turn = writable(-1);
+export const currentColor = derived(turn, ($turn) => COLOR_ORDER[$turn % COLOR_ORDER.length]);
 
-export const tiles = writable(new Map<AxialCoords, Tile>());
-export const edges = writable(new Map<AxialCoords, EdgePiece | null>());
-export const corners = writable(new Map<AxialCoords, CornerPiece | null>());
+export const tiles = writable<Map<AxialCoords, Tile>>(undefined);
+export const edges = writable<Map<AxialCoords, EdgePiece | null>>(undefined);
+export const corners = writable<Map<AxialCoords, CornerPiece | null>>(undefined);

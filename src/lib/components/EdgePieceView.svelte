@@ -3,7 +3,7 @@
 	import { EdgePieceType } from '$lib/util/enums';
 	import { calculateEdgeRotation, convertAxialToSquare } from '$lib/util/helpers';
 	import type { AxialCoords, EdgePiece } from '$lib/util/types';
-	import { edges, turn } from '$lib/stores';
+	import { currentColor, edges } from '$lib/stores';
 
 	export let piece: EdgePiece | null;
 	export let pos: AxialCoords;
@@ -19,7 +19,7 @@
 		style:top="{y - EDGE_BUTTON_HEIGHT / 2}%"
 		style:rotate="{calculateEdgeRotation(pos)}rad"
 		on:click={() => {
-			edges.update((edges) => edges.set(pos, { color: turn, type: EdgePieceType.Road }));
+			edges.update((edges) => edges.set(pos, { color: $currentColor, type: EdgePieceType.Road }));
 		}}
 	/>
 {:else}

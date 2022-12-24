@@ -1,3 +1,4 @@
+import { Color } from './enums';
 import type { AxialCoords } from './types';
 
 export const TILE_AXIAL_COORDS: AxialCoords[] = [
@@ -271,6 +272,8 @@ export const EDGE_CONNECTIONS: [number, number][] = [
 	[49, 53],
 	[50, 53],
 ];
+
+export const COLOR_ORDER = [Color.Blue, Color.Orange, Color.Red, Color.White];
 
 // Percentage constants
 export const TILE_WIDTH = 25; // I should figure out this math...

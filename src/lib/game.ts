@@ -1,12 +1,17 @@
 import { CORNER_AXIAL_COORDS, EDGE_AXIAL_COORDS, TILE_AXIAL_COORDS } from './util/constants';
 import { Resource } from './util/enums';
 import type { AxialCoords, CornerPiece, EdgePiece, Tile } from './util/types';
-import { corners, edges, tiles } from './stores';
+import { corners, edges, tiles, turn } from './stores';
 
 export function initGame() {
+	turn.set(0);
 	tiles.set(initTiles());
 	edges.set(initEdges());
 	corners.set(initCorners());
+}
+
+export function nextTurn() {
+	turn.update((turn) => turn + 1);
 }
 
 function initTiles(): Map<AxialCoords, Tile> {

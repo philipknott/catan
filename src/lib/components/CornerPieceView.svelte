@@ -3,7 +3,7 @@
 	import { CornerPieceType } from '$lib/util/enums';
 	import { convertAxialToSquare } from '$lib/util/helpers';
 	import type { AxialCoords, CornerPiece } from '$lib/util/types';
-	import { corners, turn } from '$lib/stores';
+	import { corners, currentColor, turn } from '$lib/stores';
 
 	export let piece: CornerPiece | null;
 	export let pos: AxialCoords;
@@ -19,7 +19,7 @@
 		style:top="{y - CORNER_BUTTON_HEIGHT / 2}%"
 		on:click={() => {
 			corners.update((corners) =>
-				corners.set(pos, { color: turn, type: CornerPieceType.Settlement })
+				corners.set(pos, { color: $currentColor, type: CornerPieceType.Settlement })
 			);
 		}}
 	/>
