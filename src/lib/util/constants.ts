@@ -155,12 +155,12 @@ export const CORNER_AXIAL_COORDS: AxialCoords[] = [
 ];
 
 export const ADJACENT_CORNER_TRANSFORMATIONS: AxialCoords[] = [
-	{ q: 1 / 3, r: -2 / 3 },
-	{ q: 2 / 3, r: -1 / 3 },
-	{ q: 1 / 3, r: 1 / 3 },
-	{ q: -1 / 3, r: 2 / 3 },
-	{ q: -2 / 3, r: 1 / 3 },
-	{ q: -1 / 3, r: -1 / 3 },
+	{ q: 2, r: -4 },
+	{ q: 4, r: -2 },
+	{ q: 2, r: 2 },
+	{ q: -2, r: 4 },
+	{ q: -4, r: 2 },
+	{ q: -2, r: -2 },
 ];
 
 export const COLOR_ORDER = [Color.Blue, Color.Orange, Color.Red, Color.White];

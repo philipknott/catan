@@ -9,17 +9,17 @@
 	<div class="board">
 		<!-- Tiles -->
 		{#each [...$tiles] as [pos, tile]}
-			<TileView {pos} {tile} />
+			<TileView {tile} pos={JSON.parse(pos)} />
 		{/each}
 
 		<!-- Edges -->
 		{#each [...$edges] as [pos, piece]}
-			<EdgePieceView {piece} {pos} />
+			<EdgePieceView {piece} pos={JSON.parse(pos)} />
 		{/each}
 
 		<!-- Corners -->
 		{#each [...$corners] as [pos, piece]}
-			<CornerPieceView {piece} {pos} />
+			<CornerPieceView {piece} pos={JSON.parse(pos)} />
 		{/each}
 	</div>
 </div>

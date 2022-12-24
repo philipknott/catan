@@ -1,7 +1,8 @@
 import { CORNER_AXIAL_COORDS, EDGE_AXIAL_COORDS, TILE_AXIAL_COORDS } from './util/constants';
-import { Resource } from './util/enums';
+import { CornerPieceType, EdgePieceType, Resource } from './util/enums';
 import type { AxialCoords, CornerPiece, EdgePiece, Tile } from './util/types';
-import { corners, edges, tiles, turn } from './stores';
+import { corners, currentColor, edges, tiles, turn } from './stores';
+import { get } from 'svelte/store';
 
 export function initGame() {
 	turn.set(0);
@@ -14,7 +15,31 @@ export function nextTurn() {
 	turn.update((turn) => turn + 1);
 }
 
-function initTiles(): Map<AxialCoords, Tile> {
+export function setCorner(pos: AxialCoords, type: CornerPieceType) {
+	const piece: CornerPiece = {
+		color: get(currentColor),
+		type,
+	};
+	corners.update((corners) => corners.set(JSON.stringify(pos), piece));
+}
+
+export function getCorner(pos: AxialCoords) {
+	return get(corners).get(JSON.stringify(pos));
+}
+
+export function setEdge(pos: AxialCoords, type: EdgePieceType) {
+	const piece: EdgePiece = {
+		color: get(currentColor),
+		type,
+	};
+	edges.update((edges) => edges.set(JSON.stringify(pos), piece));
+}
+
+export function getEdge(pos: AxialCoords) {
+	return get(edges).get(JSON.stringify(pos));
+}
+
+function initTiles(): Map<string, Tile> {
 	const resources = [
 		Resource.Brick,
 		Resource.Brick,
@@ -46,24 +71,24 @@ function initTiles(): Map<AxialCoords, Tile> {
 	};
 
 	// Create tiles
-	const tiles: Map<AxialCoords, Tile> = new Map<AxialCoords, Tile>();
+	const tiles = new Map<string, Tile>();
 	for (const pos of TILE_AXIAL_COORDS) {
 		const resource = chooseResource();
 		const value = resource != Resource.Desert ? chooseValue() : null;
-		tiles.set(pos, { resource, value });
+		tiles.set(JSON.stringify(pos), { resource, value });
 	}
 
 	return tiles;
 }
 
-function initEdges(): Map<AxialCoords, EdgePiece | null> {
-	const edges = new Map<AxialCoords, EdgePiece | null>();
-	EDGE_AXIAL_COORDS.forEach((pos) => edges.set(pos, null));
+function initEdges(): Map<string, EdgePiece | null> {
+	const edges = new Map<string, EdgePiece | null>();
+	EDGE_AXIAL_COORDS.forEach((pos) => edges.set(JSON.stringify(pos), null));
 	return edges;
 }
 
-function initCorners(): Map<AxialCoords, CornerPiece | null> {
-	const corners = new Map<AxialCoords, CornerPiece | null>();
-	CORNER_AXIAL_COORDS.forEach((pos) => corners.set(pos, null));
+function initCorners(): Map<string, CornerPiece | null> {
+	const corners = new Map<string, CornerPiece | null>();
+	CORNER_AXIAL_COORDS.forEach((pos) => corners.set(JSON.stringify(pos), null));
 	return corners;
 }
