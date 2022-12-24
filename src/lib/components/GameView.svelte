@@ -6,14 +6,20 @@
 	initGame();
 </script>
 
-<div>
+<div class="game">
 	<BoardView />
+	<div style:width="400px">
+		<h1>Turn #{$turn}: {$currentColor}</h1>
+		<button on:click={nextTurn}>Next Turn</button>
+	</div>
 </div>
-<h1>Turn #{$turn}: {$currentColor}</h1>
-<button on:click={nextTurn}>Next Turn</button>
 
 <style>
 	div {
+		margin: 20px;
+	}
+
+	.game {
 		display: flex;
 		justify-content: center;
 	}

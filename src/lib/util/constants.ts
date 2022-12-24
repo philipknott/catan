@@ -273,6 +273,15 @@ export const EDGE_CONNECTIONS: [number, number][] = [
 	[50, 53],
 ];
 
+export const ADJACENT_CORNER_TRANSFORMATIONS: AxialCoords[] = [
+	{ q: 1 / 3, r: -2 / 3 },
+	{ q: 2 / 3, r: -1 / 3 },
+	{ q: 1 / 3, r: 1 / 3 },
+	{ q: -1 / 3, r: 2 / 3 },
+	{ q: -2 / 3, r: 1 / 3 },
+	{ q: -1 / 3, r: -1 / 3 },
+];
+
 export const COLOR_ORDER = [Color.Blue, Color.Orange, Color.Red, Color.White];
 
 // Percentage constants

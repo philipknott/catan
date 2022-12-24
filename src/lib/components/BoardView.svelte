@@ -28,7 +28,7 @@
 	.wrapper {
 		padding: 50px;
 		border: 2px solid red;
-		max-width: 1000px;
+		max-width: 700px;
 		width: 100%;
 	}
 
