@@ -1,0 +1,15 @@
+<svg id="Layer_4" data-name="Layer 4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 75">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #1c75bc;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <rect class="cls-1" width="300" height="75"/>
+  <rect class="cls-2" width="300" height="75"/>
+</svg>
