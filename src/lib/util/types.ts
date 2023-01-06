@@ -1,6 +1,6 @@
-import type { Color, CornerPieceType, EdgePieceType, Resource } from './enums';
+import type { Color, Resource } from './enums';
 
-export type AxialCoords = {
+export type Position = {
 	q: number;
 	r: number;
 };
@@ -10,19 +10,17 @@ export type SquareCoords = {
 	y: number;
 };
 
-export type Tile = {
+export type Hex = {
 	resource: Resource;
-	value: number | null;
+	value: number | undefined;
 };
 
 export type Piece = {
 	color: Color;
 };
 
-export type EdgePiece = Piece & {
-	type: EdgePieceType;
-};
+export type EdgePiece = Piece;
 
 export type CornerPiece = Piece & {
-	type: CornerPieceType;
+	isCity: boolean;
 };

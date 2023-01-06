@@ -1,45 +1,62 @@
-import { CORNER_AXIAL_COORDS, EDGE_AXIAL_COORDS, TILE_AXIAL_COORDS } from './util/constants';
-import { CornerPieceType, EdgePieceType, Resource } from './util/enums';
-import type { AxialCoords, CornerPiece, EdgePiece, Tile } from './util/types';
-import { corners, currentColor, edges, tiles, turn } from './stores';
-import { get } from 'svelte/store';
+import { derived, writable } from 'svelte/store';
+import { CORNER_AXIAL_COORDS, EDGE_AXIAL_COORDS, HEX_AXIAL_COORDS } from './util/constants';
+import { Resource, Color } from './util/enums';
+import type { CornerPiece, EdgePiece, Hex, Position } from './util/types';
 
-export function initGame() {
+export class Player {
+	availableCornerPositions: Position[] = [];
+	availableEdgePositions: Position[] = [];
+	victoryPoints = 0;
+}
+
+// let turn: number;
+// let currentColor: Color;
+
+const colors = [Color.White, Color.Orange, Color.Red, Color.Blue];
+
+export const turn = writable<number>();
+export const colorToMove = derived(turn, ($turn) => colors[$turn % 4]);
+
+// export let players = new Map<Color, Player>();
+
+// export const testPlayer = writable<Player>();
+export let player: Player;
+
+export const hexes = writable(new Map<string, Hex>());
+export const cornerPieces = writable(new Map<string, CornerPiece>());
+export const edgePieces = writable(new Map<string, EdgePiece>());
+
+// export const hexes = new Map<string, Hex>();
+// export const cornerPieces = new Map<string, CornerPiece>();
+// export const edgePieces = new Map<string, EdgePiece>();
+
+function init() {
 	turn.set(0);
-	tiles.set(initTiles());
-	edges.set(initEdges());
-	corners.set(initCorners());
+	// initPlayers();
+
+	player = new Player();
+	player.availableCornerPositions = CORNER_AXIAL_COORDS;
+	player.availableEdgePositions = EDGE_AXIAL_COORDS;
+
+	initHexes();
+	cornerPieces.set(new Map<string, CornerPiece>());
+	edgePieces.set(new Map<string, EdgePiece>());
 }
 
-export function nextTurn() {
-	turn.update((turn) => turn + 1);
-}
+// function initPlayers() {
+// 	players = new Map<Color, Player>();
+// 	players.set(Color.White, new Player());
+// 	players.set(Color.Orange, new Player());
+// 	players.set(Color.Red, new Player());
+// 	players.set(Color.Blue, new Player());
 
-export function setCorner(pos: AxialCoords, type: CornerPieceType) {
-	const piece: CornerPiece = {
-		color: get(currentColor),
-		type,
-	};
-	corners.update((corners) => corners.set(JSON.stringify(pos), piece));
-}
+// 	for (const player of players.values()) {
+// 		player.availableCornerPositions = CORNER_AXIAL_COORDS;
+// 		player.availableEdgePositions = EDGE_AXIAL_COORDS;
+// 	}
+// }
 
-export function getCorner(pos: AxialCoords) {
-	return get(corners).get(JSON.stringify(pos));
-}
-
-export function setEdge(pos: AxialCoords, type: EdgePieceType) {
-	const piece: EdgePiece = {
-		color: get(currentColor),
-		type,
-	};
-	edges.update((edges) => edges.set(JSON.stringify(pos), piece));
-}
-
-export function getEdge(pos: AxialCoords) {
-	return get(edges).get(JSON.stringify(pos));
-}
-
-function initTiles(): Map<string, Tile> {
+export const initHexes = (): Map<string, Hex> => {
 	const resources = [
 		Resource.Brick,
 		Resource.Brick,
@@ -70,25 +87,13 @@ function initTiles(): Map<string, Tile> {
 		return values.splice(Math.floor(values.length * Math.random()), 1)[0];
 	};
 
-	// Create tiles
-	const tiles = new Map<string, Tile>();
-	for (const pos of TILE_AXIAL_COORDS) {
+	// Create hexes
+	const hexes = new Map<string, Hex>();
+	for (const pos of HEX_AXIAL_COORDS) {
 		const resource = chooseResource();
-		const value = resource != Resource.Desert ? chooseValue() : null;
-		tiles.set(JSON.stringify(pos), { resource, value });
+		const value = resource != Resource.Desert ? chooseValue() : undefined;
+		hexes.set(JSON.stringify(pos), { resource, value });
 	}
 
-	return tiles;
-}
-
-function initEdges(): Map<string, EdgePiece | null> {
-	const edges = new Map<string, EdgePiece | null>();
-	EDGE_AXIAL_COORDS.forEach((pos) => edges.set(JSON.stringify(pos), null));
-	return edges;
-}
-
-function initCorners(): Map<string, CornerPiece | null> {
-	const corners = new Map<string, CornerPiece | null>();
-	CORNER_AXIAL_COORDS.forEach((pos) => corners.set(JSON.stringify(pos), null));
-	return corners;
-}
+	return hexes;
+};

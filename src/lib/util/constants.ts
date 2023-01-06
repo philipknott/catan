@@ -1,7 +1,7 @@
 import { Color } from './enums';
-import type { AxialCoords } from './types';
+import type { Position } from './types';
 
-export const TILE_AXIAL_COORDS: AxialCoords[] = [
+export const HEX_AXIAL_COORDS: Position[] = [
 	{ q: -12, r: 0 },
 	{ q: -12, r: 6 },
 	{ q: -12, r: 12 },
@@ -22,7 +22,7 @@ export const TILE_AXIAL_COORDS: AxialCoords[] = [
 	{ q: 12, r: -6 },
 	{ q: 12, r: 0 },
 ];
-export const EDGE_AXIAL_COORDS: AxialCoords[] = [
+export const EDGE_AXIAL_COORDS: Position[] = [
 	{ q: -15, r: 0 },
 	{ q: -15, r: 6 },
 	{ q: -15, r: 12 },
@@ -97,7 +97,7 @@ export const EDGE_AXIAL_COORDS: AxialCoords[] = [
 	{ q: 15, r: -3 },
 ];
 
-export const CORNER_AXIAL_COORDS: AxialCoords[] = [
+export const CORNER_AXIAL_COORDS: Position[] = [
 	{ q: -16, r: 2 },
 	{ q: -16, r: 8 },
 	{ q: -16, r: 14 },
@@ -154,7 +154,7 @@ export const CORNER_AXIAL_COORDS: AxialCoords[] = [
 	{ q: 16, r: -2 },
 ];
 
-export const ADJACENT_CORNER_TRANSFORMATIONS: AxialCoords[] = [
+export const ADJACENT_CORNER_TRANSFORMATIONS: Position[] = [
 	{ q: 2, r: -4 },
 	{ q: 4, r: -2 },
 	{ q: 2, r: 2 },
@@ -163,11 +163,11 @@ export const ADJACENT_CORNER_TRANSFORMATIONS: AxialCoords[] = [
 	{ q: -2, r: -2 },
 ];
 
-export const COLOR_ORDER = [Color.Blue, Color.Orange, Color.Red, Color.White];
+export const COLORS = [Color.Blue, Color.Orange, Color.Red, Color.White];
 
 // Percentage constants
-export const TILE_WIDTH = 25; // I should figure out this math...
-export const TILE_HEIGHT = 20;
+export const HEX_WIDTH = 25; // I should figure out this math...
+export const HEX_HEIGHT = 20;
 
 export const EDGE_BUTTON_WIDTH = 6;
 export const EDGE_BUTTON_HEIGHT = 2;

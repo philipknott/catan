@@ -1,23 +1,23 @@
 <script lang="ts">
-	import { TILE_HEIGHT, TILE_WIDTH } from '$lib/util/constants';
+	import { HEX_HEIGHT, HEX_WIDTH } from '$lib/util/constants';
+
 	import { Resource } from '$lib/util/enums';
 	import { convertAxialToSquare } from '$lib/util/helpers';
-	import type { AxialCoords, Tile } from '$lib/util/types';
+	import type { Hex, Position } from '$lib/util/types';
 
-	export let tile: Tile;
-	export let pos: AxialCoords;
+	export let hex: Hex;
+	export let pos: Position;
 
-	const { resource, value } = tile;
+	const { resource, value } = hex;
 	const { x, y } = convertAxialToSquare(pos);
 </script>
 
-<!-- Tile Resource -->
 <img
-	class="tile"
-	src="tiles/{resource}.png"
+	class="hex"
+	src="hexes/{resource}.png"
 	alt=""
-	style:left="{x - TILE_WIDTH / 2}%"
-	style:top="{y - TILE_HEIGHT / 2}%"
+	style:left="{x - HEX_WIDTH / 2}%"
+	style:top="{y - HEX_HEIGHT / 2}%"
 />
 
 <!-- Value -->
@@ -33,7 +33,7 @@
 {/if}
 
 <style>
-	.tile {
+	.hex {
 		position: absolute;
 		z-index: 0;
 		max-width: 25%;

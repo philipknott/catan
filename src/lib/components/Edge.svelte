@@ -1,45 +1,53 @@
 <script lang="ts">
 	import { EDGE_BUTTON_HEIGHT, EDGE_BUTTON_WIDTH } from '$lib/util/constants';
-	import { EdgePieceType } from '$lib/util/enums';
 	import { calculateEdgeRotation, convertAxialToSquare } from '$lib/util/helpers';
-	import type { AxialCoords, EdgePiece } from '$lib/util/types';
-	import { setEdge } from '$lib/game';
+	import type { EdgePiece, Position } from '$lib/util/types';
 
-	export let piece: EdgePiece | null;
-	export let pos: AxialCoords;
+	export let piece: EdgePiece | undefined = undefined;
+	export let pos: Position;
+	export let onClick: () => void = () => {};
 
 	const { x, y } = convertAxialToSquare(pos);
 </script>
 
-{#if piece == null}
-	<button
+{#if piece}
+	<img
+		src="pieces/road_{piece.color}.svg"
+		alt=""
 		style:width="{EDGE_BUTTON_WIDTH}%"
 		style:height="{EDGE_BUTTON_HEIGHT}%"
 		style:left="{x - EDGE_BUTTON_WIDTH / 2}%"
 		style:top="{y - EDGE_BUTTON_HEIGHT / 2}%"
 		style:rotate="{calculateEdgeRotation(pos)}rad"
-		on:click={() => setEdge(pos, EdgePieceType.Road)}
+		on:focus={onClick}
 	/>
 {:else}
 	<button
+		class="vacant"
 		style:width="{EDGE_BUTTON_WIDTH}%"
 		style:height="{EDGE_BUTTON_HEIGHT}%"
 		style:left="{x - EDGE_BUTTON_WIDTH / 2}%"
 		style:top="{y - EDGE_BUTTON_HEIGHT / 2}%"
 		style:rotate="{calculateEdgeRotation(pos)}rad"
-		style:opacity="100%"
-		style:background-color={piece.color}
+		disabled={!onClick}
+		on:focus={onClick}
 	/>
 {/if}
 
 <style>
+	img {
+		position: absolute;
+	}
+
 	button {
 		position: absolute;
-		opacity: 0%;
 		z-index: 2;
 	}
 
-	button:hover {
+	button.vacant {
+		opacity: 0%;
+	}
+	button.vacant:hover {
 		opacity: 50%;
 	}
 </style>

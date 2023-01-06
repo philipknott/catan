@@ -1,6 +1,7 @@
-import type { AxialCoords, SquareCoords } from './types';
+import { ADJACENT_CORNER_TRANSFORMATIONS, CORNER_AXIAL_COORDS } from './constants';
+import type { Position, SquareCoords } from './types';
 
-export const convertAxialToSquare = (ac: AxialCoords): SquareCoords => {
+export function convertAxialToSquare(ac: Position): SquareCoords {
 	const q = ac.q / 6;
 	const r = ac.r / 6;
 	const s = -q - r;
@@ -9,9 +10,9 @@ export const convertAxialToSquare = (ac: AxialCoords): SquareCoords => {
 		x: 12.5 * (q - r / 2 - s / 2) + 50,
 		y: 10 * (r - s) + 50,
 	};
-};
+}
 
-export const calculateEdgeRotation = (ac: AxialCoords): number => {
+export function calculateEdgeRotation(ac: Position): number {
 	const q = ac.q / 6;
 	const r = ac.r / 6;
 
@@ -26,4 +27,13 @@ export const calculateEdgeRotation = (ac: AxialCoords): number => {
 	}
 
 	throw Error('Edge coordinates invalid');
-};
+}
+
+export function getAdjacentCornerPositions(pos: Position): Position[] {
+	return ADJACENT_CORNER_TRANSFORMATIONS.map(
+		(trans): Position => ({
+			q: pos.q + trans.q,
+			r: pos.r + trans.r,
+		})
+	).filter((adj) => CORNER_AXIAL_COORDS.some((pos) => JSON.stringify(adj) == JSON.stringify(pos)));
+}

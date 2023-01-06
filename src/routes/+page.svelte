@@ -1,7 +1,7 @@
 <script lang="ts">
-	import GameView from '$lib/components/GameView.svelte';
+	import Game from '$lib/components/Game.svelte';
 </script>
 
 <main>
-	<GameView />
+	<Game />
 </main>
