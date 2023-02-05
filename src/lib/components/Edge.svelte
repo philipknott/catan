@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { EDGE_BUTTON_HEIGHT, EDGE_BUTTON_WIDTH } from '$lib/util/constants';
 	import { calculateEdgeRotation, convertAxialToSquare } from '$lib/util/helpers';
-	import type { EdgePiece, Position } from '$lib/util/types';
+	import type { Piece, Position } from '$lib/util/types';
 
-	export let piece: EdgePiece | undefined = undefined;
+	export let piece: Piece | undefined = undefined;
 	export let pos: Position;
 	export let onClick: () => void = () => {};
 
@@ -45,7 +45,7 @@
 	}
 
 	button.vacant {
-		opacity: 0%;
+		opacity: 25%;
 	}
 	button.vacant:hover {
 		opacity: 50%;

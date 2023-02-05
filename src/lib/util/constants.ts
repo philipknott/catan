@@ -163,6 +163,24 @@ export const ADJACENT_CORNER_TRANSFORMATIONS: Position[] = [
 	{ q: -2, r: -2 },
 ];
 
+export const ADJACENT_EDGE_TRANSFORMATIONS: Position[] = [
+	{ q: 3, r: 0 },
+	{ q: 3, r: -3 },
+	{ q: 0, r: 3 },
+	{ q: -3, r: 0 },
+	{ q: -3, r: 3 },
+	{ q: 0, r: -3 },
+];
+
+export const ADJACENT_HALFSTEP_TRANSFORMATIONS: Position[] = [
+	{ q: -2, r: 1 },
+	{ q: -1, r: 2 },
+	{ q: 1, r: 1 },
+	{ q: 2, r: -1 },
+	{ q: 1, r: -2 },
+	{ q: -1, r: -1 },
+];
+
 export const COLORS = [Color.Blue, Color.Orange, Color.Red, Color.White];
 
 // Percentage constants

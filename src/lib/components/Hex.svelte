@@ -37,6 +37,7 @@
 		position: absolute;
 		z-index: 0;
 		max-width: 25%;
+		opacity: 25%;
 	}
 
 	.value {

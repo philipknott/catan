@@ -1,32 +1,26 @@
 <script lang="ts">
-	import type { Color } from '$lib/util/enums';
-	import type { CornerPiece, EdgePiece, Hex, Position } from '$lib/util/types';
-	import CornerView from './Corner.svelte';
-	import EdgeView from './Edge.svelte';
-
+	import type { Move, PieceMove } from '$lib/classes/Move';
+	import { PieceType, type Color } from '$lib/util/enums';
+	import { getUniversalMoves, initHexes } from '$lib/util/helpers';
+	import type { Piece } from '$lib/util/types';
+	import { getContext } from 'svelte';
+	import Corner from './Corner.svelte';
+	import Edge from './Edge.svelte';
 	import HexView from './Hex.svelte';
 
 	export let currentColor: Color;
-	export let hexes: Map<string, Hex>;
-	export let cornerPieces: Map<string, CornerPiece>;
-	export let edgePieces: Map<string, EdgePiece>;
-	export let availableCorners: Position[];
-	export let availableEdges: Position[];
+	export let pieces: Map<string, Piece>;
+	export let moves: Move[];
+	export let canPlaceAnywhere: boolean;
 
-	const placeSettlement = (pos: Position) => {
-		const settlement: CornerPiece = {
-			color: currentColor,
-			isCity: false,
-		};
-		cornerPieces.set(JSON.stringify(pos), settlement);
-		cornerPieces = cornerPieces;
-	};
+	const executeMove: (move: Move) => void = getContext('executeMove');
 
-	const placeRoad = (pos: Position) => {
-		const road: EdgePiece = { color: currentColor };
-		edgePieces.set(JSON.stringify(pos), road);
-		edgePieces = edgePieces;
-	};
+	// Initialize hexes
+	const hexes = initHexes();
+
+	$: pieceMoves = canPlaceAnywhere
+		? getUniversalMoves(currentColor)
+		: moves.map((move) => move as PieceMove);
 </script>
 
 <div class="wrapper">
@@ -36,25 +30,32 @@
 			<HexView pos={JSON.parse(strPos)} {hex} />
 		{/each}
 
-		<!-- Available Corners -->
-		{#each [...availableCorners] as pos (pos)}
-			<CornerView {pos} onClick={() => placeSettlement(pos)} />
+		<!-- Pieces -->
+		{#each [...pieces] as [strPos, piece]}
+			{#if piece.type == PieceType.Road}
+				<Edge {piece} pos={JSON.parse(strPos)} />
+			{:else}
+				<Corner {piece} pos={JSON.parse(strPos)} />
+			{/if}
 		{/each}
 
-		<!-- Available edges -->
-		{#each [...availableEdges] as pos (pos)}
-			<EdgeView {pos} onClick={() => placeRoad(pos)} />
+		<!-- Available Positions -->
+		{#each pieceMoves as move (JSON.stringify(move.pos))}
+			{#if move.type == PieceType.Road}
+				<Edge pos={move.pos} onClick={() => executeMove(move)} />
+			{:else}
+				<Corner pos={move.pos} onClick={() => executeMove(move)} />
+			{/if}
 		{/each}
 
-		<!-- Corner Pieces -->
-		{#each [...cornerPieces] as [strPos, piece] (strPos)}
-			<CornerView pos={JSON.parse(strPos)} {piece} />
+		<!-- Position Labels (helpful for debugging) -->
+		<!-- {#each CORNER_AXIAL_COORDS as pos}
+			<Label content={`(${pos.q},${pos.r})`} {pos} />
 		{/each}
 
-		<!-- Edge Pieces -->
-		{#each [...edgePieces] as [strPos, piece] (strPos)}
-			<EdgeView pos={JSON.parse(strPos)} {piece} />
-		{/each}
+		{#each EDGE_AXIAL_COORDS as pos}
+			<Label content={`(${pos.q},${pos.r})`} {pos} />
+		{/each} -->
 	</div>
 </div>
 

@@ -1,4 +1,4 @@
-import type { Color, Resource } from './enums';
+import type { Color, PieceType, Resource } from './enums';
 
 export type Position = {
 	q: number;
@@ -17,10 +17,5 @@ export type Hex = {
 
 export type Piece = {
 	color: Color;
-};
-
-export type EdgePiece = Piece;
-
-export type CornerPiece = Piece & {
-	isCity: boolean;
+	type: PieceType;
 };

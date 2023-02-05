@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { CORNER_BUTTON_HEIGHT, CORNER_BUTTON_WIDTH } from '$lib/util/constants';
+	import { PieceType } from '$lib/util/enums';
 	import { convertAxialToSquare } from '$lib/util/helpers';
-	import type { CornerPiece, Position } from '$lib/util/types';
-	import { onMount } from 'svelte';
+	import type { Piece, Position } from '$lib/util/types';
 
-	export let piece: CornerPiece | undefined = undefined;
+	export let piece: Piece | undefined = undefined;
 	export let pos: Position;
 	export let onClick: () => void = () => {};
+
+	const isCity = piece?.type == PieceType.City;
 
 	const { x, y } = convertAxialToSquare(pos);
 </script>
@@ -22,7 +24,7 @@
 	/>
 {:else}
 	<img
-		src="pieces/{piece.isCity ? 'city' : 'settlement'}_{piece.color}.svg"
+		src="pieces/{isCity ? 'city' : 'settlement'}_{piece.color}.svg"
 		alt=""
 		style:width="{CORNER_BUTTON_WIDTH}%"
 		style:height="{CORNER_BUTTON_HEIGHT}%"
@@ -44,7 +46,7 @@
 	}
 
 	button.vacant {
-		opacity: 0%;
+		opacity: 25%;
 	}
 
 	button.vacant:hover {

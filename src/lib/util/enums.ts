@@ -14,6 +14,12 @@ export enum Color {
 	White = 'white',
 }
 
+export enum PieceType {
+	Road,
+	Settlement,
+	City,
+}
+
 export enum EdgePieceType {
 	Road,
 }
