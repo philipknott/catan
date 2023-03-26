@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { HEX_HEIGHT, HEX_WIDTH } from '$lib/util/constants';
-
 	import { Resource } from '$lib/util/enums';
-	import { convertAxialToSquare } from '$lib/util/helpers';
+	import { convertAxialToSquare, getResourceName } from '$lib/util/helpers';
 	import type { Hex, Position } from '$lib/util/types';
 
 	export let hex: Hex;
@@ -14,7 +13,7 @@
 
 <img
 	class="hex"
-	src="hexes/{resource}.png"
+	src="hexes/hex_{resource}.png"
 	alt=""
 	style:left="{x - HEX_WIDTH / 2}%"
 	style:top="{y - HEX_HEIGHT / 2}%"
@@ -37,7 +36,7 @@
 		position: absolute;
 		z-index: 0;
 		max-width: 25%;
-		opacity: 25%;
+		/* opacity: 25%; */
 	}
 
 	.value {

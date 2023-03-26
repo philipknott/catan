@@ -192,3 +192,9 @@ export const EDGE_BUTTON_HEIGHT = 2;
 
 export const CORNER_BUTTON_WIDTH = 5;
 export const CORNER_BUTTON_HEIGHT = 5;
+
+// Costs
+export const COST_SETTLEMENT = [1, 1, 1, 0, 1];
+export const COST_ROAD = [1, 0, 1, 0, 0];
+export const COST_CITY = [0, 0, 0, 3, 2];
+export const COST_DEV_CARD = [0, 1, 1, 1, 0];

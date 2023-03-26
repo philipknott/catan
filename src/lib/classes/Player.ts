@@ -1,3 +1,1 @@
-export default class Player {
-	victoryPoints = 0;
-}
+export default class Player {}

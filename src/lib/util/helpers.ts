@@ -1,4 +1,4 @@
-import { CityMove, PieceMove, RoadMove, SettlementMove, type Move } from '$lib/classes/Move';
+import { PieceMove, type Move } from '$lib/classes/Move';
 import {
 	ADJACENT_CORNER_TRANSFORMATIONS,
 	ADJACENT_EDGE_TRANSFORMATIONS,
@@ -10,23 +10,30 @@ import {
 import { Color, PieceType, Resource } from './enums';
 import type { Hex, Piece, Position, SquareCoords } from './types';
 
+/**
+ * Converts a position from axial (hexagonal) coordinates to square coordinates
+ * @param ac Position (Q and R values)
+ * @returns X and Y values
+ */
 export function convertAxialToSquare(ac: Position): SquareCoords {
 	const q = ac.q / 6;
 	const r = ac.r / 6;
 	const s = -q - r;
-
 	return {
 		x: 12.5 * (q - r / 2 - s / 2) + 50,
 		y: 10 * (r - s) + 50,
 	};
 }
 
+/**
+ * Calculates the slope of an edge on the game board
+ * @param ac Position of an edge
+ * @returns The slope (in radians)
+ */
 export function calculateEdgeRotation(ac: Position): number {
 	const q = ac.q / 6;
 	const r = ac.r / 6;
-
 	const [wq, wr] = [q % 1 == 0, r % 1 == 0];
-
 	if (!wq && wr) {
 		return -Math.PI / 3; // Upslope
 	} else if (wq && !wr) {
@@ -34,17 +41,18 @@ export function calculateEdgeRotation(ac: Position): number {
 	} else if (!wq && !wr) {
 		return Math.PI / 3; // Downslope
 	}
-
 	throw Error('Edge coordinates invalid');
 }
 
+/**
+ * Compares two Positions by their values
+ * @param a Position
+ * @param b Position
+ * @returns True if the positions are equal
+ */
 export const equals = (a: Position, b: Position) => JSON.stringify(a) == JSON.stringify(b);
 
 export const isCornerPos = (pos: Position) => {
-	// Edge positions only have q and r values that are divisible by 3
-	// return pos.q % 3 != 0;
-
-	// Check the long way
 	return CORNER_AXIAL_COORDS.map((e) => JSON.stringify(e)).includes(JSON.stringify(pos));
 };
 
@@ -166,7 +174,28 @@ export const getAdjacentPieces = (pieces: Map<string, Piece>, pos: Position) => 
 	return a1.concat(a2);
 };
 
-export const calculateMoves = (pieces: Map<string, Piece>, currentColor: Color): Move[] => {
+/**
+ * Creates settlement move for every available corner position
+ */
+export const getAllSettlementMoves = (pieces: Map<string, Piece>): Move[] => {
+	const moves: Move[] = [];
+
+	for (const cornerPos of CORNER_AXIAL_COORDS) {
+		const strPos = JSON.stringify(cornerPos);
+		if (pieces.has(strPos)) continue;
+		if (getAdjacentCornerPieces(pieces, cornerPos).length > 0) continue;
+
+		const move = new PieceMove(PieceType.Settlement, cornerPos);
+		moves.push(move);
+	}
+
+	return moves;
+};
+
+export const calculateAvailableMoves = (
+	pieces: Map<string, Piece>,
+	currentColor: Color
+): Move[] => {
 	console.log('updating moves');
 	const moves = [];
 
@@ -202,7 +231,7 @@ export const calculateMoves = (pieces: Map<string, Piece>, currentColor: Color):
 
 		// Add move
 		console.log(`road move added: ${JSON.stringify(edgePos)}`);
-		moves.push(new RoadMove(currentColor, edgePos));
+		moves.push(new PieceMove(PieceType.Road, edgePos));
 	}
 
 	// Settlements and cities
@@ -226,7 +255,7 @@ export const calculateMoves = (pieces: Map<string, Piece>, currentColor: Color):
 
 			// Add settlement move
 			console.log(`settlement move added: ${JSON.stringify(cornerPos)}`);
-			moves.push(new SettlementMove(currentColor, cornerPos));
+			moves.push(new PieceMove(PieceType.Settlement, cornerPos));
 			continue;
 		}
 
@@ -239,7 +268,7 @@ export const calculateMoves = (pieces: Map<string, Piece>, currentColor: Color):
 
 		// Add city move
 		console.log(`city move added: ${JSON.stringify(cornerPos)}`);
-		moves.push(new CityMove(currentColor, cornerPos));
+		moves.push(new PieceMove(PieceType.City, cornerPos));
 	}
 
 	console.log(`moves calculated: ${moves.length}`);
@@ -247,13 +276,39 @@ export const calculateMoves = (pieces: Map<string, Piece>, currentColor: Color):
 	return moves;
 };
 
-export const getUniversalMoves = (color: Color): PieceMove[] => {
+export const getUniversalMoves = (pieces: Map<string, Piece>, color: Color): PieceMove[] => {
 	const moves: PieceMove[] = [];
 	for (const edgePos of EDGE_AXIAL_COORDS) {
-		moves.push(new RoadMove(color, edgePos));
+		if (!pieces.has(JSON.stringify(edgePos))) {
+			moves.push(new RoadMove(color, edgePos));
+		}
 	}
 	for (const cornerPos of CORNER_AXIAL_COORDS) {
-		moves.push(new SettlementMove(color, cornerPos));
+		if (
+			!pieces.has(JSON.stringify(cornerPos)) &&
+			getAdjacentCornerPieces(pieces, cornerPos).length == 0
+		) {
+			moves.push(new SettlementMove(color, cornerPos));
+		}
 	}
 	return moves;
+};
+
+export const getResourceName = (resource: Resource) => {
+	switch (resource) {
+		case Resource.Brick:
+			return 'brick';
+		case Resource.Grain:
+			return 'grain';
+		case Resource.Lumber:
+			return 'lumber';
+		case Resource.Ore:
+			return 'ore';
+		case Resource.Wool:
+			return 'wool';
+		case Resource.Desert:
+			return 'desert';
+		default:
+			throw new Error('Invalid resource');
+	}
 };
