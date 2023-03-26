@@ -56,11 +56,11 @@ export default class GameController {
 			Resource.Lumber,
 			Resource.Lumber,
 			Resource.Lumber,
-			Resource.Desert,
+			null,
 		];
 		const values = [2, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 12];
 
-		const chooseResource = (): Resource => {
+		const chooseResource = (): Resource | null => {
 			return resources.splice(Math.floor(resources.length * Math.random()), 1)[0];
 		};
 		const chooseValue = (): number => {
@@ -71,7 +71,7 @@ export default class GameController {
 		const hexes = new Map<Position, Hex>();
 		for (const pos of HEX_AXIAL_COORDS) {
 			const resource = chooseResource();
-			const value = resource != Resource.Desert ? chooseValue() : undefined;
+			const value = resource != null ? chooseValue() : undefined;
 			hexes.set(pos, { resource, value });
 		}
 

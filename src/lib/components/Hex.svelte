@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { HEX_HEIGHT, HEX_WIDTH } from '$lib/util/constants';
 	import { Resource } from '$lib/util/enums';
-	import { convertAxialToSquare, getResourceName } from '$lib/util/helpers';
+	import { convertAxialToSquare } from '$lib/util/helpers';
 	import type { Hex, Position } from '$lib/util/types';
 
 	export let hex: Hex;
@@ -13,14 +13,14 @@
 
 <img
 	class="hex"
-	src="hexes/hex_{resource}.png"
+	src="hexes/hex_{resource ?? 'desert'}.png"
 	alt=""
 	style:left="{x - HEX_WIDTH / 2}%"
 	style:top="{y - HEX_HEIGHT / 2}%"
 />
 
 <!-- Value -->
-{#if resource != Resource.Desert}
+{#if resource != null}
 	<p
 		class="value"
 		style:left="{x - 2.5}%"

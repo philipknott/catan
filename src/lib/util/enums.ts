@@ -4,7 +4,6 @@ export enum Resource {
 	Lumber,
 	Ore,
 	Wool,
-	Desert,
 }
 
 export enum Color {
