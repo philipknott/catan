@@ -1,7 +1,7 @@
 import { Color, PieceType } from './enums';
-import type { Position, ResourceCollection } from './types';
+import type { ResourceCollection } from './types';
 
-export const HEX_AXIAL_COORDS: Position[] = [
+export const HEX_AXIAL_COORDS: { q: number; r: number }[] = [
 	{ q: -12, r: 0 },
 	{ q: -12, r: 6 },
 	{ q: -12, r: 12 },
@@ -22,7 +22,7 @@ export const HEX_AXIAL_COORDS: Position[] = [
 	{ q: 12, r: -6 },
 	{ q: 12, r: 0 },
 ];
-export const EDGE_AXIAL_COORDS: Position[] = [
+export const EDGE_AXIAL_COORDS: { q: number; r: number }[] = [
 	{ q: -15, r: 0 },
 	{ q: -15, r: 6 },
 	{ q: -15, r: 12 },
@@ -97,7 +97,7 @@ export const EDGE_AXIAL_COORDS: Position[] = [
 	{ q: 15, r: -3 },
 ];
 
-export const CORNER_AXIAL_COORDS: Position[] = [
+export const CORNER_AXIAL_COORDS: { q: number; r: number }[] = [
 	{ q: -16, r: 2 },
 	{ q: -16, r: 8 },
 	{ q: -16, r: 14 },
@@ -154,7 +154,7 @@ export const CORNER_AXIAL_COORDS: Position[] = [
 	{ q: 16, r: -2 },
 ];
 
-export const ADJACENT_CORNER_TRANSFORMATIONS: Position[] = [
+export const ADJACENT_CORNER_TRANSFORMATIONS: { q: number; r: number }[] = [
 	{ q: 2, r: -4 },
 	{ q: 4, r: -2 },
 	{ q: 2, r: 2 },
@@ -163,7 +163,7 @@ export const ADJACENT_CORNER_TRANSFORMATIONS: Position[] = [
 	{ q: -2, r: -2 },
 ];
 
-export const ADJACENT_EDGE_TRANSFORMATIONS: Position[] = [
+export const ADJACENT_EDGE_TRANSFORMATIONS: { q: number; r: number }[] = [
 	{ q: 3, r: 0 },
 	{ q: 3, r: -3 },
 	{ q: 0, r: 3 },
@@ -172,13 +172,22 @@ export const ADJACENT_EDGE_TRANSFORMATIONS: Position[] = [
 	{ q: 0, r: -3 },
 ];
 
-export const ADJACENT_HALFSTEP_TRANSFORMATIONS: Position[] = [
+export const ADJACENT_HALFSTEP_TRANSFORMATIONS: { q: number; r: number }[] = [
 	{ q: -2, r: 1 },
 	{ q: -1, r: 2 },
 	{ q: 1, r: 1 },
 	{ q: 2, r: -1 },
 	{ q: 1, r: -2 },
 	{ q: -1, r: -1 },
+];
+
+export const ADJACENT_HEX_TRANSFORMATIONS: { q: number; r: number }[] = [
+	{ q: 0, r: -6 },
+	{ q: 0, r: 6 },
+	{ q: 6, r: -6 },
+	{ q: 6, r: 0 },
+	{ q: -6, r: 6 },
+	{ q: -6, r: 0 },
 ];
 
 export const COLORS = [Color.Blue, Color.Orange, Color.Red, Color.White];
@@ -203,3 +212,5 @@ export const ITEM_COSTS = {
 	[PieceType.Settlement]: COST_SETTLEMENT,
 	[PieceType.City]: COST_CITY,
 };
+
+export const TOTAL_NUM_HEXES = 19;

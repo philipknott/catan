@@ -33,4 +33,8 @@ export default class Player {
 	private _discard(cost: ResourceCollection) {
 		cost.forEach((n, r) => (this._hand[r] -= n));
 	}
+
+	get hand(): number[] {
+		return this._hand;
+	}
 }

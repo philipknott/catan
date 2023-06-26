@@ -1,11 +1,11 @@
 import type { Writable } from 'svelte/store';
 import GameState from '$lib/stores/GameState';
 import { PieceType, Resource } from '$lib/util/enums';
-import type { Hex, Position } from '$lib/util/types';
+import type { Position } from '$lib/util/types';
 import { CORNER_AXIAL_COORDS, EDGE_AXIAL_COORDS, HEX_AXIAL_COORDS } from '$lib/util/constants';
 import { getAdjacentCornerPositions, getAdjacentEdgePositions } from '$lib/util/helpers';
 import { CityMove, Move, PieceMove, RoadMove, SettlementMove } from './Move';
-import Piece from './Piece';
+import Piece from '../classes/Piece';
 import Player from './Player';
 
 export default class GameController {

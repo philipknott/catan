@@ -8,4 +8,6 @@ export default class Piece {
 		this.color = color;
 		this.type = type;
 	}
+
+	toString = () => `${this.color}${this.type}`;
 }

@@ -1,11 +1,11 @@
 <script lang="ts">
+	import { Hex } from '$lib/classes/Hex';
+	import { Position } from '$lib/classes/Position';
 	import { HEX_HEIGHT, HEX_WIDTH } from '$lib/util/constants';
-	import { Resource } from '$lib/util/enums';
 	import { convertAxialToSquare } from '$lib/util/helpers';
-	import type { Hex, Position } from '$lib/util/types';
 
-	export let hex: Hex;
 	export let pos: Position;
+	export let hex: Hex;
 
 	const { resource, value } = hex;
 	const { x, y } = convertAxialToSquare(pos);

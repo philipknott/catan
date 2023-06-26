@@ -1,6 +1,7 @@
+import { Position } from '$lib/classes/Position';
 import { ITEM_COSTS } from '$lib/util/constants';
 import { PieceType } from '$lib/util/enums';
-import type { Position, ResourceCollection } from '$lib/util/types';
+import type { ResourceCollection } from '$lib/util/types';
 
 export abstract class Move {}
 

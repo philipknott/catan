@@ -1,3 +1,5 @@
+import { Hex } from '$lib/classes/Hex';
+import { Position } from '$lib/classes/Position';
 import {
 	ADJACENT_CORNER_TRANSFORMATIONS,
 	ADJACENT_EDGE_TRANSFORMATIONS,
@@ -7,9 +9,10 @@ import {
 	COST_ROAD,
 	COST_SETTLEMENT,
 	EDGE_AXIAL_COORDS,
+	HEX_AXIAL_COORDS,
 } from './constants';
-import { PieceType } from './enums';
-import type { Position, ResourceCollection, SquareCoords } from './types';
+import { Color, PieceType, Resource } from './enums';
+import type { ResourceCollection, SquareCoords } from './types';
 
 /**
  * Converts a position from axial (hexagonal) coordinates to square coordinates
@@ -106,4 +109,61 @@ export const getCost = (type: PieceType): ResourceCollection => {
 		default:
 			throw new Error('Invalid piece type');
 	}
+};
+
+export const getColorString = (color: Color): string => {
+	switch (color) {
+		case Color.White:
+			return 'white';
+		case Color.Blue:
+			return 'blue';
+		case Color.Red:
+			return 'red';
+		case Color.Orange:
+			return 'orange';
+		default:
+			throw new Error('Input color is not valid');
+	}
+};
+
+export const generateRandomHexLayout = (): Map<string, Hex> => {
+	const resources: (Resource | null)[] = [
+		Resource.Brick,
+		Resource.Brick,
+		Resource.Brick,
+		Resource.Ore,
+		Resource.Ore,
+		Resource.Ore,
+		Resource.Grain,
+		Resource.Grain,
+		Resource.Grain,
+		Resource.Grain,
+		Resource.Wool,
+		Resource.Wool,
+		Resource.Wool,
+		Resource.Wool,
+		Resource.Lumber,
+		Resource.Lumber,
+		Resource.Lumber,
+		Resource.Lumber,
+		null,
+	];
+	const values: number[] = [2, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 12];
+
+	// helper that removes a random value from an array and returns it
+	const drawOne = <T>(arr: T[]) => arr.splice(Math.floor(arr.length * Math.random()), 1)[0];
+
+	const drawRandomHexState = (): Hex => {
+		const resource = drawOne(resources);
+		const value = resource != null ? drawOne(values) : undefined;
+		return new Hex(resource, value);
+	};
+
+	const hexes = new Map<string, Hex>();
+	HEX_AXIAL_COORDS.forEach((pos) => {
+		const strPos = JSON.stringify(pos);
+		const hex = drawRandomHexState();
+		hexes.set(strPos, hex);
+	});
+	return hexes;
 };

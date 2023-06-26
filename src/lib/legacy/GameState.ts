@@ -1,11 +1,12 @@
+import { Hex } from '$lib/classes/Hex';
 import { Move, PieceMove } from '$lib/classes/Move';
 import Piece from '$lib/classes/Piece';
 import Player from '$lib/classes/Player';
 import { Color, PieceType } from '$lib/util/enums';
-import type { Hex, Position } from '$lib/util/types';
+import type { Position } from '$lib/util/types';
 
 export default class GameState {
-	private _pieces: Map<string, Piece>; // Key is JSON.stringify(Position)
+	private _pieces: Map<string, Piece>; // Key is JSON.stringify(<Position>)
 	private _players: Player[];
 	private _availableMoves: Move[];
 	private _hexes: Map<string, Hex>;
@@ -54,6 +55,10 @@ export default class GameState {
 
 	set players(players: Player[]) {
 		this._players = players;
+	}
+
+	get players(): Player[] {
+		return this._players;
 	}
 
 	// set initialPlacementModification(value: boolean) {
