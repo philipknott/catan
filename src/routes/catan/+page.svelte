@@ -9,6 +9,7 @@
 	import { Color, PieceType } from '$lib/util/enums';
 	import { generateRandomHexLayout, isCornerPos, isEdgePos } from '$lib/util/helpers';
 	import { CORNER_AXIAL_COORDS, EDGE_AXIAL_COORDS } from '$lib/util/constants';
+	import Hud from '$lib/components/hud/Hud.svelte';
 
 	/* --- Sources of Truth --- */
 
@@ -66,6 +67,7 @@
 	/* --- Game Functionality --- */
 
 	const placePiece = (pos: Position) => {
+		console.log('placePiece called');
 		const strPos = pos.toString();
 		if (isCornerPos(pos)) {
 			const newPiece = new Piece(
@@ -110,6 +112,11 @@
 
 <main>
 	<div class="game">
+		<!-- Heads Up Display (HUD) -->
+		<div class="hud-wrapper">
+			<Hud bind:turnColor />
+		</div>
+
 		<!-- Board -->
 		<div class="board-wrapper">
 			<div class="board">
@@ -134,16 +141,6 @@
 					<Edge {pos} {placePiece} />
 				{/each}
 			</div>
-		</div>
-
-		<!-- HUD -->
-		<div class="hud-wrapper">
-			<select bind:value={turnColor}>
-				<option value={Color.Blue}>Blue</option>
-				<option value={Color.Red}>Red</option>
-				<option value={Color.Orange}>Orange</option>
-				<option value={Color.White}>White</option>
-			</select>
 		</div>
 	</div>
 </main>
@@ -177,7 +174,8 @@
 
 	.hud-wrapper {
 		position: absolute;
-		width: fit-content;
-		height: fit-content;
+		width: 100%;
+		height: 100%;
+		display: 'flex';
 	}
 </style>
