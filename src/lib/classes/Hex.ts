@@ -1,15 +1,27 @@
 import { Resource } from '$lib/util/enums';
 
 export class Hex {
-	resource: Resource | null;
-	value?: number;
+	static WIDTH = 25;
+	static HEIGHT = 20;
 
-	constructor(resource: Resource | null, value?: number) {
+	get imgSrc() {
+		return 'hexes/hex_desert.png';
+	}
+}
+
+export class ResourceHex extends Hex {
+	resource: Resource;
+	numValue: number;
+
+	constructor(resource: Resource, numValue: number) {
+		super();
 		this.resource = resource;
-		this.value = value;
+		this.numValue = numValue;
 	}
 
-	toString = (): string => {
-		return `${this.resource}-${this.value}`;
-	};
+	get imgSrc() {
+		return `hexes/hex_${this.resource}.png`;
+	}
+
+	toString = () => `${this.resource}-${this.numValue}`;
 }

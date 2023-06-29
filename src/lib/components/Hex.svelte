@@ -1,33 +1,30 @@
 <script lang="ts">
-	import { Hex } from '$lib/classes/Hex';
+	import { Hex, ResourceHex } from '$lib/classes/Hex';
 	import { Position } from '$lib/classes/Position';
-	import { HEX_HEIGHT, HEX_WIDTH } from '$lib/util/constants';
-	import { convertAxialToSquare } from '$lib/util/helpers';
 
 	export let pos: Position;
 	export let hex: Hex;
 
-	const { resource, value } = hex;
-	const { x, y } = convertAxialToSquare(pos);
+	const { x, y } = pos.getCoords();
 </script>
 
 <img
 	class="hex"
-	src="hexes/hex_{resource ?? 'desert'}.png"
-	alt=""
-	style:left="{x - HEX_WIDTH / 2}%"
-	style:top="{y - HEX_HEIGHT / 2}%"
+	src={hex.imgSrc}
+	alt={hex.toString()}
+	style:left="{x - Hex.WIDTH / 2}%"
+	style:top="{y - Hex.HEIGHT / 2}%"
 />
 
 <!-- Value -->
-{#if resource != null}
+{#if hex instanceof ResourceHex}
 	<p
 		class="value"
 		style:left="{x - 2.5}%"
 		style:top="{y - 2.5}%"
-		style:color={value === 6 || value === 8 ? 'red' : 'black'}
+		style:color={hex.numValue === 6 || hex.numValue === 8 ? 'red' : 'black'}
 	>
-		{value}
+		{hex.numValue}
 	</p>
 {/if}
 
@@ -36,7 +33,6 @@
 		position: absolute;
 		z-index: 0;
 		max-width: 25%;
-		/* opacity: 25%; */
 	}
 
 	.value {

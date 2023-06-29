@@ -22,6 +22,7 @@ export const HEX_AXIAL_COORDS: { q: number; r: number }[] = [
 	{ q: 12, r: -6 },
 	{ q: 12, r: 0 },
 ];
+
 export const EDGE_AXIAL_COORDS: { q: number; r: number }[] = [
 	{ q: -15, r: 0 },
 	{ q: -15, r: 6 },
@@ -191,16 +192,6 @@ export const ADJACENT_HEX_TRANSFORMATIONS: { q: number; r: number }[] = [
 ];
 
 export const COLORS = [Color.Blue, Color.Orange, Color.Red, Color.White];
-
-// Percentage constants
-export const HEX_WIDTH = 25; // I should figure out this math...
-export const HEX_HEIGHT = 20;
-
-export const EDGE_BUTTON_WIDTH = 6;
-export const EDGE_BUTTON_HEIGHT = 2;
-
-export const CORNER_BUTTON_WIDTH = 5;
-export const CORNER_BUTTON_HEIGHT = 5;
 
 // Costs
 export const COST_SETTLEMENT: ResourceCollection = [1, 1, 1, 0, 1];

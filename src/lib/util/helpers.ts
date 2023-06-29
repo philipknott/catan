@@ -1,33 +1,7 @@
-import { Hex } from '$lib/classes/Hex';
-import { Position } from '$lib/classes/Position';
-import {
-	ADJACENT_CORNER_TRANSFORMATIONS,
-	ADJACENT_EDGE_TRANSFORMATIONS,
-	ADJACENT_HALFSTEP_TRANSFORMATIONS,
-	CORNER_AXIAL_COORDS,
-	COST_CITY,
-	COST_ROAD,
-	COST_SETTLEMENT,
-	EDGE_AXIAL_COORDS,
-	HEX_AXIAL_COORDS,
-} from './constants';
-import { Color, PieceType, Resource } from './enums';
-import type { ResourceCollection, SquareCoords } from './types';
-
-/**
- * Converts a position from axial (hexagonal) coordinates to square coordinates
- * @param ac Position (Q and R values)
- * @returns X and Y values
- */
-export function convertAxialToSquare(ac: Position): SquareCoords {
-	const q = ac.q / 6;
-	const r = ac.r / 6;
-	const s = -q - r;
-	return {
-		x: 12.5 * (q - r / 2 - s / 2) + 50,
-		y: 10 * (r - s) + 50,
-	};
-}
+import { Hex, ResourceHex } from '$lib/classes/Hex';
+import { HexPosition, Position } from '$lib/classes/Position';
+import { CORNER_AXIAL_COORDS, EDGE_AXIAL_COORDS } from './constants';
+import { Color, Resource } from './enums';
 
 /**
  * Calculates the slope of an edge on the game board
@@ -60,56 +34,56 @@ export const isEdgePos = (pos: Position) => {
  * @param pos Corner or Edge Position
  * @returns List of adjacent corner positions
  */
-export const getAdjacentCornerPositions = (pos: Position): Position[] => {
-	const transformations = isCornerPos(pos)
-		? ADJACENT_CORNER_TRANSFORMATIONS
-		: ADJACENT_HALFSTEP_TRANSFORMATIONS;
+// export const getAdjacentCornerPositions = (pos: Position): Position[] => {
+// 	const transformations = isCornerPos(pos)
+// 		? ADJACENT_CORNER_TRANSFORMATIONS
+// 		: ADJACENT_HALFSTEP_TRANSFORMATIONS;
 
-	const result = transformations
-		.map((trans) => ({
-			q: pos.q + trans.q,
-			r: pos.r + trans.r,
-		}))
-		.filter((adj) => isCornerPos(adj));
+// 	const result = transformations
+// 		.map((trans) => ({
+// 			q: pos.q + trans.q,
+// 			r: pos.r + trans.r,
+// 		}))
+// 		.filter((adj) => isCornerPos(adj));
 
-	return result;
-};
+// 	return result;
+// };
 
 /**
  * @param pos Corner or Edge Position
  * @returns List of adjacent corner positions
  */
-export const getAdjacentEdgePositions = (pos: Position): Position[] => {
-	const transformations = isCornerPos(pos)
-		? ADJACENT_HALFSTEP_TRANSFORMATIONS
-		: ADJACENT_EDGE_TRANSFORMATIONS;
+// export const getAdjacentEdgePositions = (pos: Position): Position[] => {
+// 	const transformations = isCornerPos(pos)
+// 		? ADJACENT_HALFSTEP_TRANSFORMATIONS
+// 		: ADJACENT_EDGE_TRANSFORMATIONS;
 
-	return transformations
-		.map((trans) => ({
-			q: pos.q + trans.q,
-			r: pos.r + trans.r,
-		}))
-		.filter((adj) => isEdgePos(adj));
-};
+// 	return transformations
+// 		.map((trans) => ({
+// 			q: pos.q + trans.q,
+// 			r: pos.r + trans.r,
+// 		}))
+// 		.filter((adj) => isEdgePos(adj));
+// };
 
-export const getAdjacentPositions = (pos: Position): Position[] => {
-	const a1 = getAdjacentCornerPositions(pos);
-	const a2 = getAdjacentEdgePositions(pos);
-	return a1.concat(a2);
-};
+// export const getAdjacentPositions = (pos: Position): Position[] => {
+// 	const a1 = getAdjacentCornerPositions(pos);
+// 	const a2 = getAdjacentEdgePositions(pos);
+// 	return a1.concat(a2);
+// };
 
-export const getCost = (type: PieceType): ResourceCollection => {
-	switch (type) {
-		case PieceType.Road:
-			return COST_ROAD;
-		case PieceType.Settlement:
-			return COST_SETTLEMENT;
-		case PieceType.City:
-			return COST_CITY;
-		default:
-			throw new Error('Invalid piece type');
-	}
-};
+// export const getCost = (type: PieceType): ResourceCollection => {
+// 	switch (type) {
+// 		case PieceType.Road:
+// 			return COST_ROAD;
+// 		case PieceType.Settlement:
+// 			return COST_SETTLEMENT;
+// 		case PieceType.City:
+// 			return COST_CITY;
+// 		default:
+// 			throw new Error('Invalid piece type');
+// 	}
+// };
 
 export const getColorString = (color: Color): string => {
 	switch (color) {
@@ -126,7 +100,14 @@ export const getColorString = (color: Color): string => {
 	}
 };
 
-export const generateRandomHexLayout = (): Map<string, Hex> => {
+export const generateRandomHexLayout = (): Map<Position, Hex> => {
+	/**
+	 * 3 Brick
+	 * 3 Ore
+	 * 4 Grain
+	 * 4 Wool
+	 * 4 Lumber
+	 */
 	const resources: (Resource | null)[] = [
 		Resource.Brick,
 		Resource.Brick,
@@ -148,22 +129,30 @@ export const generateRandomHexLayout = (): Map<string, Hex> => {
 		Resource.Lumber,
 		null,
 	];
+
+	/**
+	 * 2x[3, 4, 5, 6, 8, 9, 10, 11]
+	 * 1x[2, 12]
+	 */
 	const values: number[] = [2, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 12];
 
 	// helper that removes a random value from an array and returns it
 	const drawOne = <T>(arr: T[]) => arr.splice(Math.floor(arr.length * Math.random()), 1)[0];
 
-	const drawRandomHexState = (): Hex => {
+	const drawRandomHex = (): Hex => {
 		const resource = drawOne(resources);
-		const value = resource != null ? drawOne(values) : undefined;
-		return new Hex(resource, value);
+
+		if (resource === null) {
+			return new Hex();
+		}
+
+		const value = drawOne(values);
+		return new ResourceHex(resource, value);
 	};
 
-	const hexes = new Map<string, Hex>();
-	HEX_AXIAL_COORDS.forEach((pos) => {
-		const strPos = JSON.stringify(pos);
-		const hex = drawRandomHexState();
-		hexes.set(strPos, hex);
-	});
+	const hexes = new Map<HexPosition, Hex>();
+	for (const pos of HexPosition.ALL_POSSIBLE_POSITIONS) {
+		hexes.set(pos, drawRandomHex());
+	}
 	return hexes;
 };

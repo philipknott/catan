@@ -1,20 +1,20 @@
 export enum Resource {
-	Brick,
-	Grain,
-	Lumber,
-	Ore,
-	Wool,
+	Brick = 'brick',
+	Grain = 'grain',
+	Lumber = 'lumber',
+	Ore = 'ore',
+	Wool = 'wool',
 }
 
 export enum Color {
-	Blue,
-	Orange,
-	Red,
-	White,
+	Blue = 'blue',
+	Orange = 'orange',
+	Red = 'red',
+	White = 'white',
 }
 
 export enum PieceType {
-	Road,
-	Settlement,
-	City,
+	Road = 'road',
+	Settlement = 'settlement',
+	City = 'city',
 }

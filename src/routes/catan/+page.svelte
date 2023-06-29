@@ -1,112 +1,58 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Position } from '$lib/classes/Position';
-	import Piece from '$lib/classes/Piece';
+	import { CornerPosition, EdgePosition, HexPosition, Position } from '$lib/classes/Position';
 	import { Hex } from '$lib/classes/Hex';
+	import { City, Piece, Road, Settlement } from '$lib/classes/Piece';
 	import HexView from '$lib/components/Hex.svelte';
-	import Corner from '$lib/components/Corner.svelte';
-	import Edge from '$lib/components/Edge.svelte';
-	import { Color, PieceType } from '$lib/util/enums';
-	import { generateRandomHexLayout, isCornerPos, isEdgePos } from '$lib/util/helpers';
-	import { CORNER_AXIAL_COORDS, EDGE_AXIAL_COORDS } from '$lib/util/constants';
+	import PieceView from '$lib/components/Piece.svelte';
 	import Hud from '$lib/components/hud/Hud.svelte';
+	import { Color } from '$lib/util/enums';
+	import { generateRandomHexLayout } from '$lib/util/helpers';
 
 	/* --- Sources of Truth --- */
 
 	// board hex tiles
-	let hexes = new Map<string, Hex>();
+	let hexes = new Map<HexPosition, Hex>();
 
-	// state of each position on board
-	let corners = new Map<string, Piece | null>();
-	let edges = new Map<string, Piece | null>();
+	// boardValues
+	let boardValues = new Map<EdgePosition | CornerPosition, Piece | null>();
 
 	// turn state
 	let turnColor: Color;
 
 	/* --- Derived Variables --- */
 
-	// pieces
-	let cornerPieces: Map<string, Piece>;
-	let edgePieces: Map<string, Piece>;
-
-	// positions where pieces can be placed
-	let availableCornerPositions = new Array<Position>();
-	let availableEdgePositions = new Array<Position>();
-
-	$: {
-		// sync corners
-		const _availableCornerPositions = new Array<Position>();
-		const _cornerPieces = new Map<string, Piece>();
-		const cornerEntries = Array.from(corners?.entries() ?? []);
-		for (const [strPos, value] of cornerEntries) {
-			if (value == null || value.type == PieceType.Settlement) {
-				_availableCornerPositions.push(Position.parse(strPos));
-			}
-			if (value != null) {
-				_cornerPieces.set(strPos, value);
-			}
-		}
-		availableCornerPositions = _availableCornerPositions;
-		cornerPieces = _cornerPieces;
-
-		// sync edges
-		const _availableEdgePositions = new Array<Position>();
-		const _edgePieces = new Map<string, Piece>();
-		const edgeEntries = Array.from(edges?.entries() ?? []);
-		for (const [strPos, value] of edgeEntries) {
-			if (value == null) {
-				_availableEdgePositions.push(Position.parse(strPos));
-			} else {
-				_edgePieces.set(strPos, value);
-			}
-		}
-		availableEdgePositions = _availableEdgePositions;
-		edgePieces = _edgePieces;
-	}
+	// // positions where pieces can be placed
+	// let availableCornerPositions = new Array<Position>();
+	// let availableEdgePositions = new Array<Position>();
 
 	/* --- Game Functionality --- */
 
-	const placePiece = (pos: Position) => {
-		console.log('placePiece called');
-		const strPos = pos.toString();
-		if (isCornerPos(pos)) {
-			const newPiece = new Piece(
-				turnColor,
-				corners.get(strPos) == null ? PieceType.Settlement : PieceType.City
-			);
-			corners.set(strPos, newPiece);
-			corners = corners;
-		} else if (isEdgePos(pos)) {
-			const newPiece = new Piece(turnColor, PieceType.Road);
-			edges.set(strPos, newPiece);
-			edges = edges;
-		} else {
-			throw Error('Position invalid');
-		}
-	};
-
 	onMount(() => {
+		// init hexes
 		hexes = generateRandomHexLayout();
 
-		corners = new Map<string, Piece | null>(
-			Array.from(
-				CORNER_AXIAL_COORDS.map(({ q, r }) => {
-					const pos = new Position(q, r);
-					return [pos.toString(), null];
-				})
-			)
-		);
+		// init board values
+		const _boardValues = new Map<CornerPosition | EdgePosition, Piece | null>();
+		for (const pos of CornerPosition.ALL_POSSIBLE_POSITIONS) _boardValues.set(pos, null);
+		for (const pos of EdgePosition.ALL_POSSIBLE_POSITIONS) _boardValues.set(pos, null);
+		boardValues = _boardValues;
 
-		edges = new Map<string, Piece | null>(
-			Array.from(
-				EDGE_AXIAL_COORDS.map(({ q, r }) => {
-					const pos = new Position(q, r);
-					return [pos.toString(), null];
-				})
-			)
-		);
-
+		// init turn color
 		turnColor = Color.Red;
+
+		/* --- DEBUG TEST --- */
+		const allBoardPositions = Array.from(boardValues.keys());
+		// city
+		const p1 = allBoardPositions[0];
+		boardValues.set(p1, new City(Color.Blue));
+		// settlement
+		const p2 = allBoardPositions[1];
+		boardValues.set(p2, new Settlement(Color.Red));
+		// road
+		const p3 = allBoardPositions[allBoardPositions.length - 1];
+		boardValues.set(p3, new Road(Color.Orange));
+		boardValues = boardValues;
 	});
 </script>
 
@@ -121,24 +67,15 @@
 		<div class="board-wrapper">
 			<div class="board">
 				<!-- Hexes -->
-				{#each [...hexes] as [strPos, hex] (strPos + hex.toString())}
-					<HexView pos={Position.parse(strPos)} {hex} />
+				{#each [...hexes] as [pos, hex] (pos.toString() + hex.toString())}
+					<HexView {pos} {hex} />
 				{/each}
 
 				<!-- Pieces -->
-				{#each [...cornerPieces] as [strPos, piece] (strPos + piece.toString())}
-					<Corner {piece} pos={Position.parse(strPos)} />
-				{/each}
-				{#each [...edgePieces] as [strPos, piece] (strPos + piece.toString())}
-					<Edge {piece} pos={Position.parse(strPos)} />
-				{/each}
-
-				<!-- Available positions where pieces can be placed -->
-				{#each availableCornerPositions as pos (pos.toString())}
-					<Corner {pos} {placePiece} />
-				{/each}
-				{#each availableEdgePositions as pos (pos.toString())}
-					<Edge {pos} {placePiece} />
+				{#each [...boardValues] as [pos, piece] (pos.toString() + piece?.toString() ?? 'null')}
+					{#if piece !== null}
+						<PieceView {pos} {piece} />
+					{/if}
 				{/each}
 			</div>
 		</div>
