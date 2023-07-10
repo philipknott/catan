@@ -1,30 +1,34 @@
-import type { Color } from '$lib/util/enums';
+import { PieceType, type Color } from '$lib/util/enums';
 
-export abstract class Piece {
-	abstract readonly imgSrc: string;
+export class Piece {
+	readonly pieceType: PieceType;
 	readonly color: Color;
 
-	constructor(color: Color) {
+	constructor(pieceType: PieceType, color: Color) {
+		this.pieceType = pieceType;
 		this.color = color;
 	}
-}
 
-export abstract class CornerPiece extends Piece {
-	static readonly WIDTH = 5;
-	static readonly HEIGHT = 5;
-}
+	get isEdgePiece() {
+		return this.pieceType === PieceType.Road;
+	}
 
-export abstract class EdgePiece extends Piece {
-	static readonly WIDTH = 6;
-	static readonly HEIGHT = 2;
-}
+	get width() {
+		return this.isEdgePiece ? 6 : 5;
+	}
 
-export class City extends CornerPiece {
-	imgSrc = `pieces/city_${this.color}.svg`;
-}
-export class Settlement extends CornerPiece {
-	imgSrc = `pieces/settlement_${this.color}.svg`;
-}
-export class Road extends EdgePiece {
-	imgSrc = `pieces/road_${this.color}.svg`;
+	get height() {
+		return this.isEdgePiece ? 2 : 5;
+	}
+
+	get imgSrc() {
+		return `pieces/${this.pieceType}_${this.color}.svg`;
+	}
+
+	toString = () => `${this.pieceType}_${this.color}`;
+
+	static createFromString = (str: string) => {
+		const [pieceType, color] = str.split('_');
+		return new Piece(pieceType as PieceType, color as Color);
+	};
 }

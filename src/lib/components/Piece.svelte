@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CornerPiece, EdgePiece, Piece } from '$lib/classes/Piece';
+	import { Piece } from '$lib/classes/Piece';
 	import { CornerPosition, EdgePosition } from '$lib/classes/Position';
 
 	export let piece: Piece;
@@ -7,19 +7,17 @@
 
 	const { x, y } = pos.getCoords();
 
-	const [width, height, rotate] =
-		piece instanceof CornerPiece
-			? [CornerPiece.WIDTH, CornerPiece.HEIGHT, 0]
-			: [EdgePiece.WIDTH, EdgePiece.HEIGHT, (pos as EdgePosition).rotate];
+	// if it's a road, calculate it's rotation angle on the board (radians)
+	const rotate = piece.isEdgePiece ? (pos as EdgePosition).rotate : 0;
 </script>
 
 <img
 	src={piece.imgSrc}
 	alt={piece.toString()}
-	style:width="{width}%"
-	style:height="{height}%"
-	style:left="{x - width / 2}%"
-	style:top="{y - height / 2}%"
+	style:width="{piece.width}%"
+	style:height="{piece.height}%"
+	style:left="{x - piece.width / 2}%"
+	style:top="{y - piece.height / 2}%"
 	style:rotate="{rotate}rad"
 />
 

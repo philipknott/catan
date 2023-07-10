@@ -2,12 +2,13 @@
 	import { onMount } from 'svelte';
 	import { CornerPosition, EdgePosition, HexPosition, Position } from '$lib/classes/Position';
 	import { Hex } from '$lib/classes/Hex';
-	import { City, Piece, Road, Settlement } from '$lib/classes/Piece';
 	import HexView from '$lib/components/Hex.svelte';
 	import PieceView from '$lib/components/Piece.svelte';
-	import Hud from '$lib/components/hud/Hud.svelte';
-	import { Color } from '$lib/util/enums';
+	import { Color, PieceType } from '$lib/util/enums';
 	import { generateRandomHexLayout } from '$lib/util/helpers';
+	import AvailablePiecePosition from '$lib/components/AvailablePiecePosition.svelte';
+	import PlayerInfoView from '$lib/components/hud/PlayerInfo.svelte';
+	import { Piece } from '$lib/classes/Piece';
 
 	/* --- Sources of Truth --- */
 
@@ -18,15 +19,65 @@
 	let boardValues = new Map<EdgePosition | CornerPosition, Piece | null>();
 
 	// turn state
-	let turnColor: Color;
+	let turnColor: Color = Color.Red;
 
 	/* --- Derived Variables --- */
 
 	// // positions where pieces can be placed
-	// let availableCornerPositions = new Array<Position>();
-	// let availableEdgePositions = new Array<Position>();
+	let availablePositions: Position[] = [];
 
 	/* --- Game Functionality --- */
+
+	const updateAvailablePositions = (piece: Piece) => {
+		// TODO logic that decides where pieces can be legally placed
+		if (piece.isEdgePiece) {
+			availablePositions = Array.from(boardValues.keys()).filter(
+				(pos) => pos instanceof EdgePosition
+			);
+		} else {
+			availablePositions = Array.from(boardValues.keys()).filter(
+				(pos) => pos instanceof CornerPosition
+			);
+		}
+	};
+
+	const handleDragStart = (e: DragEvent) => {
+		console.log('drag start');
+
+		// TODO maybe move these event handlers into PlayerInfo.svelte
+
+		// create the piece from the element being dragged
+		const dataset = (e.target as HTMLElement).dataset as { piecestring: string };
+		const piece = Piece.createFromString(dataset.piecestring);
+
+		// attach the piece to the event
+		e.dataTransfer!.setData('text/plain', dataset.piecestring);
+
+		// show the available positions on the board
+		updateAvailablePositions(piece);
+	};
+
+	const handleDragEnd = (e: DragEvent) => {
+		console.log('drag end');
+
+		availablePositions = [];
+	};
+
+	const handleDragEnter = (e: DragEvent) => {
+		console.log('drag enter!');
+	};
+
+	const handleDragLeave = (e: DragEvent) => {
+		console.log('drag leave!');
+	};
+
+	const handleDrop = (e: DragEvent) => {
+		console.log('drop');
+	};
+
+	const handleDragOver = (e: DragEvent) => {
+		e.preventDefault();
+	};
 
 	onMount(() => {
 		// init hexes
@@ -38,20 +89,17 @@
 		for (const pos of EdgePosition.ALL_POSSIBLE_POSITIONS) _boardValues.set(pos, null);
 		boardValues = _boardValues;
 
-		// init turn color
-		turnColor = Color.Red;
-
-		/* --- DEBUG TEST --- */
+		/* --- TESTING (adds some pieces to the board) --- */
 		const allBoardPositions = Array.from(boardValues.keys());
 		// city
 		const p1 = allBoardPositions[0];
-		boardValues.set(p1, new City(Color.Blue));
+		boardValues.set(p1, new Piece(PieceType.City, Color.Blue));
 		// settlement
 		const p2 = allBoardPositions[1];
-		boardValues.set(p2, new Settlement(Color.Red));
+		boardValues.set(p2, new Piece(PieceType.Settlement, Color.Red));
 		// road
 		const p3 = allBoardPositions[allBoardPositions.length - 1];
-		boardValues.set(p3, new Road(Color.Orange));
+		boardValues.set(p3, new Piece(PieceType.Road, Color.Orange));
 		boardValues = boardValues;
 	});
 </script>
@@ -60,7 +108,35 @@
 	<div class="game">
 		<!-- Heads Up Display (HUD) -->
 		<div class="hud-wrapper">
-			<Hud bind:turnColor />
+			<!-- TODO this code could probably be condensed with an each loop and a different display mode -->
+			<div style:display="flex" style:justify-content="space-between">
+				<PlayerInfoView
+					color={Color.Red}
+					bind:turnColor
+					on:dragstart={handleDragStart}
+					on:dragend={handleDragEnd}
+				/>
+				<PlayerInfoView
+					color={Color.Orange}
+					bind:turnColor
+					on:dragstart={handleDragStart}
+					on:dragend={handleDragEnd}
+				/>
+			</div>
+			<div style:display="flex" style:justify-content="space-between">
+				<PlayerInfoView
+					color={Color.White}
+					bind:turnColor
+					on:dragstart={handleDragStart}
+					on:dragend={handleDragEnd}
+				/>
+				<PlayerInfoView
+					color={Color.Blue}
+					bind:turnColor
+					on:dragstart={handleDragStart}
+					on:dragend={handleDragEnd}
+				/>
+			</div>
 		</div>
 
 		<!-- Board -->
@@ -76,6 +152,17 @@
 					{#if piece !== null}
 						<PieceView {pos} {piece} />
 					{/if}
+				{/each}
+
+				<!-- Available piece positions  -->
+				{#each availablePositions as pos (pos.toString())}
+					<AvailablePiecePosition
+						{pos}
+						on:dragenter={handleDragEnter}
+						on:dragleave={handleDragLeave}
+						on:dragover={handleDragOver}
+						bind:boardValues
+					/>
 				{/each}
 			</div>
 		</div>
@@ -113,6 +200,8 @@
 		position: absolute;
 		width: 100%;
 		height: 100%;
-		display: 'flex';
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
 	}
 </style>
