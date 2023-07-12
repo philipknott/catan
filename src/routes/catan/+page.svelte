@@ -24,26 +24,101 @@
 	/* --- Derived Variables --- */
 
 	// // positions where pieces can be placed
-	let availablePositions: Position[] = [];
+	let availablePositions: (EdgePosition | CornerPosition)[] = [];
 
 	/* --- Game Functionality --- */
 
-	const updateAvailablePositions = (piece: Piece) => {
-		// TODO logic that decides where pieces can be legally placed
-		if (piece.isEdgePiece) {
-			availablePositions = Array.from(boardValues.keys()).filter(
-				(pos) => pos instanceof EdgePosition
-			);
-		} else {
-			availablePositions = Array.from(boardValues.keys()).filter(
-				(pos) => pos instanceof CornerPosition
-			);
+	const calculateAvailablePositions = (piece: Piece): (CornerPosition | EdgePosition)[] => {
+		const allPositions = Array.from(boardValues.keys());
+		const allEdgePositions = allPositions
+			.filter((pos) => pos instanceof EdgePosition)
+			.map((pos) => pos as EdgePosition);
+		const allCornerPositions = allPositions
+			.filter((pos) => pos instanceof CornerPosition)
+			.map((pos) => pos as CornerPosition);
+
+		const result: (EdgePosition | CornerPosition)[] = [];
+		switch (piece.pieceType) {
+			case PieceType.Road:
+				for (const edgePos of allEdgePositions) {
+					// make sure the position is vacant
+					if (boardValues.get(edgePos) !== null) {
+						continue;
+					}
+
+					// make sure the pos is adjacent to at least one same-colored piece
+					const adjacentPositions = edgePos.getAdjacentPositions(
+						allCornerPositions,
+						allEdgePositions
+					);
+					if (
+						!adjacentPositions.some((adjPos) => {
+							const adjPiece = boardValues.get(adjPos);
+							if (!adjPiece) return false;
+							if (adjPiece.color !== piece.color) return false;
+							return true;
+						})
+					) {
+						continue;
+					}
+
+					// by this point, the position is valid
+					result.push(edgePos);
+				}
+				break;
+
+			case PieceType.Settlement:
+				for (const cornerPos of allCornerPositions) {
+					// make sure position is vacant
+					if (boardValues.get(cornerPos) !== null) {
+						continue;
+					}
+
+					// make sure it's adjacent to a road of the same color
+					const adjacentEdgePositions = cornerPos.getAdjacentEdgePositions(allEdgePositions);
+					if (
+						!adjacentEdgePositions.some((adjEdgePos) => {
+							const adjEdgePiece = boardValues.get(adjEdgePos);
+							if (!adjEdgePiece) return false;
+							if (adjEdgePiece.color !== piece.color) return false;
+							return true;
+						})
+					) {
+						continue;
+					}
+
+					// make sure it's NOT adjacent to any corner pieces
+					const adjacentCornerPositions = cornerPos.getAdjacentCornerPositions(allCornerPositions);
+					if (
+						adjacentCornerPositions.some((adjCornerPos) => {
+							if (!!boardValues.get(adjCornerPos)) return true;
+							return false;
+						})
+					) {
+						continue;
+					}
+
+					// position is valid
+					result.push(cornerPos);
+				}
+				break;
+
+			case PieceType.City:
+				for (const cornerPos of allCornerPositions) {
+					// make sure corner pos contains settlement of the same color
+					const cornerPiece = boardValues.get(cornerPos);
+					if (!cornerPiece) continue;
+					if (cornerPiece.pieceType !== PieceType.Settlement) continue;
+					if (cornerPiece.color !== piece.color) continue;
+					result.push(cornerPos);
+				}
+				break;
 		}
+
+		return result;
 	};
 
 	const handleDragStart = (e: DragEvent) => {
-		console.log('drag start');
-
 		// TODO maybe move these event handlers into PlayerInfo.svelte
 
 		// create the piece from the element being dragged
@@ -54,30 +129,17 @@
 		e.dataTransfer!.setData('text/plain', dataset.piecestring);
 
 		// show the available positions on the board
-		updateAvailablePositions(piece);
+		availablePositions = calculateAvailablePositions(piece);
 	};
 
 	const handleDragEnd = (e: DragEvent) => {
-		console.log('drag end');
-
+		// remove available positions from the board
 		availablePositions = [];
 	};
 
-	const handleDragEnter = (e: DragEvent) => {
-		console.log('drag enter!');
-	};
+	const handleDragEnter = (e: DragEvent) => {};
 
-	const handleDragLeave = (e: DragEvent) => {
-		console.log('drag leave!');
-	};
-
-	const handleDrop = (e: DragEvent) => {
-		console.log('drop');
-	};
-
-	const handleDragOver = (e: DragEvent) => {
-		e.preventDefault();
-	};
+	const handleDragLeave = (e: DragEvent) => {};
 
 	onMount(() => {
 		// init hexes
@@ -160,7 +222,6 @@
 						{pos}
 						on:dragenter={handleDragEnter}
 						on:dragleave={handleDragLeave}
-						on:dragover={handleDragOver}
 						bind:boardValues
 					/>
 				{/each}

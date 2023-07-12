@@ -1,17 +1,13 @@
 <script lang="ts">
 	import { Piece } from '$lib/classes/Piece';
 	import { CornerPosition, EdgePosition } from '$lib/classes/Position';
-	import { onMount } from 'svelte';
 
 	export let pos: EdgePosition | CornerPosition;
-
-	export let boardValues: Map<EdgePosition | CornerPosition, Piece | null>;
+	export let boardValues: Map<CornerPosition | EdgePosition, Piece | null>;
 
 	const { x, y } = pos.getCoords();
 
 	const handleDrop = (e: DragEvent) => {
-		console.log('(NEW) drop');
-
 		// create the piece from the data stored in the event
 		const strPiece = e.dataTransfer!.getData('text/plain');
 		const piece = Piece.createFromString(strPiece);
@@ -20,8 +16,6 @@
 		boardValues.set(pos, piece);
 		boardValues = boardValues;
 	};
-
-	onMount(() => console.log('spot created'));
 </script>
 
 <div
@@ -30,7 +24,7 @@
 	on:dragenter
 	on:dragleave
 	on:drop={handleDrop}
-	on:dragover
+	on:dragover={(e) => e.preventDefault()}
 />
 
 <style>
